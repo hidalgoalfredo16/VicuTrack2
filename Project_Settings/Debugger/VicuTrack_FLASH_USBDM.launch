@@ -23,7 +23,6 @@
 <booleanAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Initialization.useInitFile" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.Embedded Initialization.useMemoryConfigFile" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.HC08 Debugger.processor" value="MC9S08QE32"/>
-<booleanAttribute key="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.HC08 Interrupt.interrupt_disabled" value="true"/>
 <listAttribute key="com.freescale.cdt.debug.cw.CoreNameList">
 <listEntry value="MC9S08QE32#0"/>
 </listAttribute>
@@ -47,12 +46,12 @@
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.TerminateConnectionOn" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.ConnectionCommonData.TargetConnectionLost.promptUserActionOn" value="true"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Connection Protocol Plugin Name" value="HC08 GDI"/>
-<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Connection Type" value="com.pemicro.mcu.debug.connections.pne.hcs08"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Connection Type" value="net.sourceforge.usbdm.connections.usbdm.hcs08"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.core.settings.DebuggerCommonData.Processor Attr Name" value="com.freescale.cdt.debug.cw.CW_SHADOWED_PREF.HC08 Debugger.processor"/>
-<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.PhysicalConnectionAttributeBase" value="com.pemicro.mcu.debug.connections.pne.hcs08."/>
+<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.PhysicalConnectionAttributeBase" value="net.sourceforge.usbdm.connections.usbdm."/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.core.settings.GdiConnection.Common.logData" value="false"/>
-<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.rseSystemId" value="com.freescale.cdt.debug.cw.core.ui.rse.systemtype.bareboard.hardware.141028233402-0200.2"/>
-<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.wizardSystemNameHint" value="PnE U-MultiLink"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.rseSystemId" value="com.freescale.cdt.debug.cw.core.ui.rse.systemtype.bareboard.hardware.141104190539-0200.1"/>
+<stringAttribute key="com.freescale.cdt.debug.cw.core.settings.wizardSystemNameHint" value="USBDM"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.debuggerAddress" value="127.0.0.1"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.disableIO" value="false"/>
 <stringAttribute key="com.freescale.cdt.debug.cw.ethCtrl" value="UEC1"/>
@@ -88,16 +87,23 @@
 <booleanAttribute key="com.freescale.cdt.debug.cw.useSerialTransferIO" value="false"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useStopTransferIO" value="true"/>
 <booleanAttribute key="com.freescale.cdt.debug.cw.useUDPPort" value="false"/>
-<stringAttribute key="com.pemicro.mcu.debug.connections.pne.hcs08.CommandLineArgs" value="[hcs08_icd]"/>
-<stringAttribute key="com.pemicro.mcu.debug.connections.pne.hcs08.Library" value="hcs08_pne_gdi"/>
-<stringAttribute key="com.pemicro.mcu.debug.connections.pne.hcs08.STARTUP_PORT" value="21"/>
-<stringAttribute key="com.pemicro.mcu.debug.connections.pne.hcs08.STARTUP_interface_selection" value="1"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.Library" value="usbdm-hcs08-gdi"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.automaticReconnect" value="1"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.cycleTargetVddOnReset" value="0"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.cycleTargetVddonConnect" value="0"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.defaultBdmSerialNumber" value="Any connected USBDM"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.leaveTargetPowered" value="0"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.setTargetVdd" value="0"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.trimTargetClock" value="0"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.useAltBDMClock" value="255"/>
+<booleanAttribute key="net.sourceforge.usbdm.connections.usbdm.useDebugBuild" value="false"/>
+<stringAttribute key="net.sourceforge.usbdm.connections.usbdm.useResetSignal" value="0"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="com.freescale.cdt.debug.cw.hc08.HC08Debugger"/>
-<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="FLASH/VicuTrack2.abs"/>
-<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="VicuTrack2"/>
-<stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="toolchain.config.hcs08.release.782757612"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="FLASH/VicuTrack.abs"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="VicuTrack"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="toolchain.config.hcs08.release.1813439832"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/VicuTrack2"/>
+<listEntry value="/VicuTrack"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>

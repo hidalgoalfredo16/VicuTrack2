@@ -57,22 +57,22 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-VicuTrack2.abs \
+VicuTrack.abs \
 
 EXECUTABLES_QUOTED += \
-"VicuTrack2.abs" \
+"VicuTrack.abs" \
 
 EXECUTABLES_OS_FORMAT += \
-VicuTrack2.abs \
+VicuTrack.abs \
 
 BURNER_OUTPUT_OUTPUTS += \
-VicuTrack2.abs.s19 \
+VicuTrack.abs.s19 \
 
 BURNER_OUTPUT_OUTPUTS_QUOTED += \
-"VicuTrack2.abs.s19" \
+"VicuTrack.abs.s19" \
 
 BURNER_OUTPUT_OUTPUTS_OS_FORMAT += \
-VicuTrack2.abs.s19 \
+VicuTrack.abs.s19 \
 
 
 # All Target
@@ -83,30 +83,30 @@ call-burner := 1
 endif
 endif
 ifeq ($(call-burner),1)
-all: VicuTrack2.abs VicuTrack2.abs.s19
+all: VicuTrack.abs VicuTrack.abs.s19
 else
-all: VicuTrack2.abs
+all: VicuTrack.abs
 endif
 
 # Tool invocations
-VicuTrack2.abs: $(OBJS) $(USER_OBJS) ../Project_Settings/Linker_Files/Project.prm
+VicuTrack.abs: $(OBJS) $(USER_OBJS) ../Project_Settings/Linker_Files/Project.prm
 	@echo 'Building target: $@'
 	@echo 'Executing target #11 $@'
 	@echo 'Invoking: S08 Linker'
-	"$(HC08ToolsEnv)/linker" -ArgFile"VicuTrack2.args" -O"VicuTrack2.abs"
+	"$(HC08ToolsEnv)/linker" -ArgFile"VicuTrack.args" -O"VicuTrack.abs"
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-VicuTrack2.abs.s19: $(BBL_SRCS) $(EXECUTABLES)
+VicuTrack.abs.s19: $(BBL_SRCS) $(EXECUTABLES)
 	@echo 'Executing target #12 $@'
 	@echo 'Invoking: S08 Burner'
-	"$(HC08ToolsEnv)/burner" -ArgFile"VicuTrack2.abs.args" -f="$<" -env"ABS_FILE=$(strip $(EXECUTABLES_OS_FORMAT))"
+	"$(HC08ToolsEnv)/burner" -ArgFile"VicuTrack.abs.args" -f="$<" -env"ABS_FILE=$(strip $(EXECUTABLES_OS_FORMAT))"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(S_DEPS_QUOTED) "./*/*.obj" "./*/*/*.obj"  $(CPP_DEPS_QUOTED) $(CC_DEPS_QUOTED) $(S_UPPER_DEPS_QUOTED) $(CXX_DEPS_QUOTED) $(ASM_DEPS_QUOTED) $(BURNER_OUTPUT_OUTPUTS_QUOTED) $(ASM_UPPER_DEPS_QUOTED) $(C_UPPER_DEPS_QUOTED) $(C++_DEPS_QUOTED) $(EXECUTABLES_QUOTED) "./*/*.d" "./*/*/*.d"  $(ProjDirPath)/FLASH/VicuTrack2.abs
+	-$(RM) $(S_DEPS_QUOTED) "./*/*.obj" "./*/*/*.obj"  $(CPP_DEPS_QUOTED) $(CC_DEPS_QUOTED) $(S_UPPER_DEPS_QUOTED) $(CXX_DEPS_QUOTED) $(ASM_DEPS_QUOTED) $(BURNER_OUTPUT_OUTPUTS_QUOTED) $(ASM_UPPER_DEPS_QUOTED) $(C_UPPER_DEPS_QUOTED) $(C++_DEPS_QUOTED) $(EXECUTABLES_QUOTED) "./*/*.d" "./*/*/*.d"  $(ProjDirPath)/FLASH/VicuTrack.abs $(ProjDirPath)/FLASH/VicuTrack.abs.args $(ProjDirPath)/FLASH/VicuTrack.abs.s19 $(ProjDirPath)/FLASH/VicuTrack.args $(ProjDirPath)/FLASH/VicuTrack.map
 	-@echo ' '
 
 .PHONY: all clean dependents explicit-dependencies warning-messages

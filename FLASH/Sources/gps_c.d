@@ -1,10 +1,10 @@
 
 Sources/gps_c.obj: \
-	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/../Sources/gps.c \
-	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/gps.h \
-	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/derivative.h \
-	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/mc9s08qe32.h \
-	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/error.h \
-	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/led.h \
-	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/CPU.h 
+	D:/CodeWarriorWorkSpace/VicuTrack/Project_Headers/../Sources/gps.c \
+	D:/CodeWarriorWorkSpace/VicuTrack/Project_Headers/gps.h \
+	D:/CodeWarriorWorkSpace/VicuTrack/Project_Headers/derivative.h \
+	D:/CodeWarriorWorkSpace/VicuTrack/Project_Headers/mc9s08qe32.h \
+	D:/CodeWarriorWorkSpace/VicuTrack/Project_Headers/error.h \
+	D:/CodeWarriorWorkSpace/VicuTrack/Project_Headers/led.h \
+	D:/CodeWarriorWorkSpace/VicuTrack/Project_Headers/CPU.h 
 
