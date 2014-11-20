@@ -41,13 +41,15 @@ void main(void) {
   error resp2, resp3;
   long ult_lat=0,ult_lon=0;
   trama_reducida tr[tam_trama_reducida];
+  PTCDD_PTCDD4 = 1;
+  PTCD_PTCD4 = 1;
   temp=Init_CPU();
   temp=Init_Trans();
   temp=Init_LED();
   temp=Init_GPS();
   temp=(error) SD_Init();
   temp=SD_Prender();
-  LED_BrillarR(2,UNSEG);
+  LED_BrillarV(2,UNSEG);
   (void)SD_LeerDireccion();
   ult_lat=0;
   ult_lon=0;
@@ -97,7 +99,7 @@ void main(void) {
 		(void)GPS_Apagar();
 		 if(intentos_gps<5){
 			resp2 = GPS_Dato(dat,tr);// limpiamos la trama y dejamos solo los datos importantes
-			 LED_PrenderV(); // Avisa que tengo un dato bien tomado del GPS
+			 LED_BrillarV(2,UNSEG); // Avisa que tengo un dato bien tomado del GPS
 			ban_datogps=1;	 //indica q logro tomar un dato gps.
 			vueltasRTC=VUELTAS;      //para prueba
 			(void)GPS_SincronizarHM(); //Corregimos el RTC para despertar en horario de señal de muerte

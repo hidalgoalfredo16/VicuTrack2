@@ -20,7 +20,20 @@ extern long dir_base_lon;
 extern byte ban_horasm;
 
 error Init_GPS(void){
-	return 1;
+    SCI1BDH = 0x00;             
+    SCI1BDL = 0xDF;
+    // SCIC1: LOOPS=0,SCISWAI=0,RSRC=0,M=0,WAKE=0,ILT=0,PE=0,PT=0
+    SCI1C1 = 0x00;       // Configure the SCI
+    // SCIC3: R8=0,T8=0,TXDIR=0,TXINV=0,ORIE=0,NEIE=0,FEIE=0,PEIE=0
+    SCI1C3 = 0x00;       // Disable error interrupts
+    // SCIC2: TIE=0,TCIE=0,RIE=0,ILIE=0,TE=0,RE=1,RWU=0,SBK=0
+    SCI1C2 = 0x04; 
+	// pin 15 como salida - PTC1
+    PTCDD_PTCDD1 = 1;
+    // bandera para saber si fixea o no, y dar mas tiempo
+    ban_fix=0;
+           
+    return _ERR_OK;
 }
 
 error GPS_Prender(void){
