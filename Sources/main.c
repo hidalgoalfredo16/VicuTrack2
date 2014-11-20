@@ -41,8 +41,8 @@ void main(void) {
   error resp2, resp3;
   long ult_lat=0,ult_lon=0;
   trama_reducida tr[tam_trama_reducida];
-  PTCDD_PTCDD4 = 1;
-  PTCD_PTCD4 = 1;
+ // PTCDD_PTCDD4 = 1;
+ // PTCD_PTCD4 = 1;
   temp=Init_CPU();
   temp=Init_Trans();
   temp=Init_LED();

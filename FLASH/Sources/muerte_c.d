@@ -1,4 +1,5 @@
 
+
 Sources/muerte_c.obj: \
 	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/../Sources/muerte.c \
 	C:/Freescale/CW\ MCU\ v10.6/MCU/lib/hc08c/include/hidef.h \

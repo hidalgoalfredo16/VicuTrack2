@@ -9,8 +9,8 @@
 
 /* Definitions */
 
-#define  SPI_SS  PTED_PTED7      /* Slave Select */
-#define _SPI_SS  PTEDD_PTEDD7    
+#define  SPI_SS  PTBD_PTBD5      /* Slave Select */
+#define _SPI_SS  PTBDD_PTBDD5    /* Se cambio el PTED 7 por PTBD 5*/
 
 /* Prototypes */
 

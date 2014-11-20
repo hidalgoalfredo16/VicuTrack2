@@ -8,15 +8,15 @@ void SPI_Init(void) {
   SPI_SS = 1;
   _SPI_SS= 1;
   
-  SPIBR = 0x06; // 375 Khz    		
-  SPIC2 = 0x00;  
-  SPIC1 = SPIC1_SPE_MASK | SPIC1_MSTR_MASK;
+  SPIBR = 0x62; // 375 Khz(esto es con 06 que venia en el de Esteban)  Setea el prescaler y el baud rate		
+  SPIC2 = 0x00; // Registro de control 
+  SPIC1 = SPIC1_SPE_MASK | SPIC1_MSTR_MASK; //pone en 1 spe para habilitar y el mstr para q sea master y no esclavo
 }
 /************************************************/
 void SPI_SendByte(UINT8 u8Data) {
-	while(!SPIS_SPTEF) ;
-    (void)SPIS;
-	SPID = u8Data;
+	while(!SPIS_SPTEF); // Registro de estado indica si el buffer esta vacio o no
+    (void)SPIS; //Limpia el registro SPIS
+	SPID = u8Data; 
 }
 /************************************************/
 UINT8 SPI_ReceiveByte(void) {
@@ -27,7 +27,7 @@ UINT8 SPI_ReceiveByte(void) {
   */
   SPI_SendByte(0xFF);
   //SPI1DL = 0xFF;
-  while (!SPIS_SPRF) ;	
+  while (!SPIS_SPRF) ;	//Espera hasta que hay un dato disponible
   return(SPID);
 } 
 /************************************************/
