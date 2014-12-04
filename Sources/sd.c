@@ -19,6 +19,7 @@ struct {
   UINT8 VERSION2;
 } gSDCard;
 
+
 UINT8 SD_SendCommand(UINT8 u8SDCommand, UINT32 u32Param, UINT8 pu32Response[], UINT8 u8ResponseLength) {
   UINT8 u8R1;
   UINT8 u8Counter;
@@ -58,7 +59,7 @@ UINT8 SD_SendCommand(UINT8 u8SDCommand, UINT32 u32Param, UINT8 pu32Response[], U
   /* Response RHandler (R1) */
   u8Counter = SD_WAIT_CYCLES;
   do {
-      u8R1 = ReadSPIByte();
+      u8R1 = ReadSPIByte();							//Recibe Respuesta de SD (R1=1byte)
       u8Counter--;
   } while(((u8R1 & 0x80) != 0) && (u8Counter > 0));
  
@@ -77,6 +78,7 @@ UINT8 SD_SendCommand(UINT8 u8SDCommand, UINT32 u32Param, UINT8 pu32Response[], U
   
   return (u8R1);
 }
+
 
 UINT8 SD_ReadData(UINT8 pu8DataPointer[], UINT32 u32DataLength) {
   UINT8  CRC[2];
@@ -100,6 +102,7 @@ UINT8 SD_ReadData(UINT8 pu8DataPointer[], UINT32 u32DataLength) {
 
 	return (SD_OK);  
 }
+
 
 UINT8 SD_WriteData(UINT8 pu8DataPointer[], UINT32 u32DataLength) {
   UINT8 u8R1;
@@ -134,10 +137,11 @@ UINT8 SD_WriteData(UINT8 pu8DataPointer[], UINT32 u32DataLength) {
   return(SD_OK);	
 }
 
+
 UINT8 SD_Init(void) {
   //volatile UINT8 DelayFlag; 
   UINT16 u16Counter;
-  UINT8  u8R1;
+  volatile UINT8  u8R1;
   UINT8  CSD[16];
   UINT32 u32Ifc;
   UINT32 u32Ocr;
@@ -256,9 +260,79 @@ UINT8 SD_Init(void) {
   if(u8R1 == SD_FAIL_TIMEOUT) return (SD_FAIL_INIT);
   
   if(u8R1 & SD_R1_ERROR_MASK) return (SD_FAIL_INIT);
-
+  
+  SPI_HighRate();	//Cambio el baudrate
   return (SD_OK);
 }
+
+/*****************************************************************************/
+//! Función para la lectura de un sector de disco de la tarjeta
+/*! 
+    Esta función realiza la lectura de un sector de 512 bytes de datos
+*/
+UINT8 SD_ReadSector(UINT32 u32SD_Block,UINT8 pu8DataPointer[]) {
+  volatile UINT8 u8Temp = 0;
+
+  __RESET_WATCHDOG(); /* feeds the dog */
+	
+  if (!gSDCard.SDHC) u32SD_Block <<= SD_BLOCK_SHIFT;
+     
+  SPI_SS = ENABLE;
+  //Utilizo u8Temp para capturar respuesta de la tarjeta SD (fines depurativos)
+  u8Temp = SD_SendCommand(SD_CMD17_READ_BLOCK, u32SD_Block, NULL, 0); 
+  if((u8Temp & SD_R1_ERROR_MASK) != SD_OK) {
+    SPI_SS = DISABLE;    
+    return (SD_FAIL_READ);
+  }
+  
+	while(u8Temp != 0xFE) u8Temp = ReadSPIByte(); 
+	//La SD responde 0xFF...0xFF mientras accede al sector y 0xFE cuando esta lista. 
+	//Los datos que envía a continuación corresponden al sector solicitado. 
+	
+  if (SD_ReadData(pu8DataPointer,SD_BLOCK_SIZE) != SD_OK) return (SD_FAIL_READ);
+  
+  SPI_SS = DISABLE;
+  
+  return (SD_OK);
+}
+/*****************************************************************************/
+UINT8 SD_WriteSector(UINT32 u32SD_Block, UINT8 * pu8DataPointer) {
+    UINT16 u16Counter;
+    UINT8  SD_response;
+    
+    __RESET_WATCHDOG(); /* feeds the dog */
+  
+    SPI_SS = ENABLE;
+    
+    if(!gSDCard.SDHC) u32SD_Block <<= SD_BLOCK_SHIFT;
+    
+    if(SD_SendCommand(SD_CMD24_WRITE_BLOCK, u32SD_Block, NULL, 0) != SD_OK) {
+      SPI_SS = DISABLE;
+      return (SD_FAIL_WRITE);      
+    }
+    
+    WriteSPIByte(0xFE);    
+		
+     for(u16Counter = 0; u16Counter < SD_BLOCK_SIZE; u16Counter++)
+			WriteSPIByte(*pu8DataPointer++);
+
+    WriteSPIByte(0xFF);    // checksum Bytes not needed
+    WriteSPIByte(0xFF);
+    
+		SD_response=0xFF; 
+    while (SD_response == 0xFF) SD_response = ReadSPIByte(); 
+    if((SD_response & 0x0F) != 0x05) {
+        SPI_SS=DISABLE;
+        return (SD_FAIL_WRITE);    
+    }
+		
+		while(ReadSPIByte()==0x00) ;  // Dummy SPI cycle
+    SPI_SS = DISABLE;
+	
+    return (SD_OK);
+}
+
+//ARRANCAN LAS FUNCIONES DE LOS CHICOS****************************** 
 
 error SD_Prender(){
     word Index;
@@ -282,7 +356,7 @@ error SD_Prender(){
     do{
         (void)SD_EnviarCMD(CMD1,arg);	  
     	  (void)SD_EnviarRecibirByte(DUMMY_BYTE,&Rx);
-    	  (void)SD_EnviarRecibirByte(DUMMY_BYTE,&Rx);
+    	  (void)SD_EnviarRecibirByte(DUMMY_BYTE,&Rx);				//Esta incluido en SD_Init()
     	  (void)SD_EnviarRecibirByte(DUMMY_BYTE,&Rx);
     }while(Rx != 0 && timer++ < TIMER_RESP);
   	if(timer >= TIMER_RESP)
@@ -363,7 +437,7 @@ error SD_Leer(dato lectura[][tam_dato]) {
     (void)SD_Assert();
     // Leemos 512 bytes
         arg[0]=0x00;
-    	  arg[1]=0x00;
+    	arg[1]=0x00;
         arg[2]=0x02;
         arg[3]=0x00;
         
@@ -427,8 +501,20 @@ error SD_Leer(dato lectura[][tam_dato]) {
 //-----------------------------   SD_ESCRIBIR   -----------------------------//
 
 
-error SD_Escribir(byte *direccion,dato buf[][tam_dato]){
-    byte Rx;
+error SD_Escribir(byte *direccion, dato buf[][tam_dato]){
+    UINT32 u32SD_Block; // Convertimos la direccion en una variable de 32 bits
+    
+    u32SD_Block = direccion[0];
+    u32SD_Block <<= 8;
+    u32SD_Block |= direccion[1];
+    u32SD_Block <<= 8;
+    u32SD_Block |= direccion[2];
+    u32SD_Block <<= 8;
+    u32SD_Block |= direccion[3];
+	
+    return (error) SD_WriteSector(u32SD_Block, buf);
+	
+    /*byte Rx;
     int i=0 , h=0 , cantidad_espacios=0 , j=0;
     (void)SD_EnviarCMD(CMD24,direccion);  // CMD24 para escribir
     // Debemos recibir respuesta R1
@@ -471,7 +557,7 @@ error SD_Escribir(byte *direccion,dato buf[][tam_dato]){
 	  (void)Cpu_Delay100US(100);
 	  SD_Assert();     // Hacemos un Assert (-SS=0 Activo en baja)
     ban_SDvacia=0;
-    return _ERR_OK;
+    return _ERR_OK;*/
 }
 
 
@@ -588,9 +674,9 @@ error SD_LeerDireccion(){
     arg[1]=0x00;
     arg[2]=0x00;
     arg[3]=0x08;
-    dirbase[0]=0x00;
-    dirbase[1]=0x05;
-    dirbase[2]=0x04;
+    dirbase[0]=0x02;
+    dirbase[1]=0x06;
+    dirbase[2]=0x00;
     dirbase[3]=0x00;
         
     
@@ -649,9 +735,9 @@ error SD_EscribirDireccion(){
 	byte Rx;
 	byte dirbase[4];
     int i=0 , h=0 , cantidad_espacios=0 , j=0;
-    dirbase[0]=0x00;
-    dirbase[1]=0x05;
-    dirbase[2]=0x04;
+    dirbase[0]=0x02;
+    dirbase[1]=0x06;
+    dirbase[2]=0x00;
     dirbase[3]=0x00;
     (void)SD_EnviarCMD(CMD24,dirbase);  // CMD24 para escribir
     // Debemos recibir respuesta R1

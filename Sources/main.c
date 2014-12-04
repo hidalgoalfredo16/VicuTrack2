@@ -48,7 +48,8 @@ void main(void) {
   temp=Init_LED();
   temp=Init_GPS();
   temp=(error) SD_Init();
-  temp=SD_Prender();
+  temp=(error) SD_Init();
+  //temp=SD_Prender();
   LED_BrillarV(2,UNSEG);
   (void)SD_LeerDireccion();
   ult_lat=0;
@@ -112,7 +113,7 @@ void main(void) {
 					 ban_datodif=0; //igual y a cont. escribimos el dato distinto.
 					 if( GPS_EscribirBuffer(ult_dat,Buffer_GPS)==_ERR_OVF){// escribimos en el buffer, si esta lleno informa
 						  temp=(error) SD_Init();
-						  temp=SD_Prender();
+						  //temp=SD_Prender();
 						  resp3=SD_Escribir(dir_escritura,Buffer_GPS);// escribimos la SD con el buffer lleno
 						  resp2=SD_CalculaDireccion(dir_escritura);// actualizamos la dir escritura de la SD
 						  (void)GPS_EscribirBuffer(ult_dat,Buffer_GPS);// escribimos el dato q no se pudo guardar anteriormente
@@ -120,7 +121,7 @@ void main(void) {
 				}
 				 if( GPS_EscribirBuffer(dat,Buffer_GPS)==_ERR_OVF){
 					 temp=(error) SD_Init();
-					 temp=SD_Prender();
+					 //temp=SD_Prender();
 					 resp3=SD_Escribir(dir_escritura,Buffer_GPS);
 					 resp2=SD_CalculaDireccion(dir_escritura);
 					 (void)GPS_EscribirBuffer(dat,Buffer_GPS);

@@ -5,10 +5,10 @@ void SPI_Init(void) {
   
   //SOPT2 = SOPT2_SPI1PS_MASK;  // Drive PTE as SPI port
   
-  SPI_SS = 1;
-  _SPI_SS= 1;
+  SPI_SS = 1; //deshabilita PTBD5
+  _SPI_SS= 1; 
   
-  SPIBR = 0x62; // 375 Khz(esto es con 06 que venia en el de Esteban)  Setea el prescaler y el baud rate		
+  SPIBR = 0x06; // 375 Khz(esto es con 0x06 que venia en el de Esteban)  Setea el prescaler y el baud rate		
   SPIC2 = 0x00; // Registro de control 
   SPIC1 = SPIC1_SPE_MASK | SPIC1_MSTR_MASK; //pone en 1 spe para habilitar y el mstr para q sea master y no esclavo
 }

@@ -44,7 +44,7 @@
 #define SD_BLOCK_SHIFT  (9)
 
 #define SD_WAIT_CYCLES  20
-#define SD_INIT_RETRIES 3000
+#define SD_INIT_RETRIES 5000
 
 #define SD_FAIL_TIMEOUT 0xFF
 #define SD_FAIL_INIT 	  0xFE
@@ -89,6 +89,18 @@ UINT8 SD_WriteData(UINT8 pu8DataPointer[], UINT32 u32DataLength);
 */
 UINT8 SD_Init(void);
 
+/*****************************************************************************/
+//! Función para la lectura de un sector de disco de la tarjeta
+/*! 
+    Esta función realiza la lectura de un sector de 512 bytes de datos
+*/
+
+UINT8 SD_ReadSector(UINT32 u32SD_Block,UINT8 pu8DataPointer[]);
+
+/*****************************************************************************/
+UINT8 SD_WriteSector(UINT32 u32SD_Block, UINT8 * pu8DataPointer);
+
+//ARRANCAN LAS FUNCIONES DE LOS CHICOS*****************************************
 
 //! Enciende tarjeta SD
 /*!
