@@ -12,4 +12,5 @@
 -F2
 -ViewHidden
 -WmsgFob"%f%e:%l:%k:%d %m\n"
+-O0
 -Cs08

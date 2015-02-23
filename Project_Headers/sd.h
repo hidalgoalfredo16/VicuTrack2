@@ -178,7 +178,8 @@ error SD_SetBaudRateMode(byte);
     @li @c 1 No se produjo un error
     @li @c 7 Se produjo un error de direccion
 */
-error SD_CalculaDireccion(byte *dir);
+//error SD_CalculaDireccion(byte *dir);
+error SD_CalculaDireccion(byte *dir, dato buf[][tam_dato]);
 
 //! Escritura de prueba
 /*!

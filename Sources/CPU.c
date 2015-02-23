@@ -62,8 +62,8 @@ error Init_CPU(void){
 	    ban_ACK=APAGADO;
 	    ban_muerte=APAGADO;
 	    ban_finao=APAGADO;
-	    dir_base_lat=89600000;//89600000;//26481282;//26481282 gabriel//26505903 facultad;
-	    dir_base_lon=0;//65122019;//65122019 gabriel//65138195 facultad;
+	    dir_base_lat=26505903;//89600000;//26481282;//26481282 gabriel//26505903 facultad;
+	    dir_base_lon=65138195;//65122019;//65122019 gabriel//65138195 facultad;
 	    index_Rx=0;
 	    return _ERR_OK;
 }

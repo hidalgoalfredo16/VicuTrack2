@@ -18,6 +18,8 @@ dato ult_dat[tam_dato];
 byte ban_horasm=NO;
 byte dir_escritura[4];
 byte dir_lectura[4];
+unsigned long direccion;
+UINT32 u32SD_Block = 2601;
 
 //////// DECLARACION DE VARIABLES EXTERNAS //////////
 extern byte ban_fix;
@@ -41,14 +43,14 @@ void main(void) {
   error resp2, resp3;
   long ult_lat=0,ult_lon=0;
   trama_reducida tr[tam_trama_reducida];
- // PTCDD_PTCDD4 = 1;
- // PTCD_PTCD4 = 1;
+  PTCDD_PTCDD4 = 1;
+  PTCD_PTCD4 = 1;
   temp=Init_CPU();
   temp=Init_Trans();
   temp=Init_LED();
   temp=Init_GPS();
   temp=(error) SD_Init();
-  temp=(error) SD_Init();
+  //temp=(error) SD_Init();
   //temp=SD_Prender();
   LED_BrillarV(2,UNSEG);
   (void)SD_LeerDireccion();
@@ -65,14 +67,15 @@ void main(void) {
 
 		 if(ban_horasm == SI){
 			EnableInterrupts;
-			(void)Transceiver_RecibirSM();			  
+			//(void)Transceiver_RecibirSM();		//Descomentar en un futuro no muy lejano	  
 			ban_horasm=NO;
-			vueltasRTC=MINUTO;
+			vueltasRTC=MINUTO; //Duerme 1 hora
 		 }
+		 
 
  /////////////// PRENDEMOS EL GPS 5 SEG PARA QUE FIXEE ///////////////			  
 
-		intentos_gps=0;
+		 intentos_gps=0;
 		 DisableInterrupts;
 		 CPU_ApagarRTC();
 		 (void)GPS_Prender();
@@ -83,10 +86,10 @@ void main(void) {
 		 
 		 
 		 EnableInterrupts;
-		 ban_esperafix=0;
+		ban_esperafix=0;
 		while(ban_esperafix==0){
 			
-		asm{STOP
+		  asm{STOP
 		 }
 		}
 		 CPU_ApagarRTC();
@@ -100,30 +103,46 @@ void main(void) {
 		(void)GPS_Apagar();
 		 if(intentos_gps<5){
 			resp2 = GPS_Dato(dat,tr);// limpiamos la trama y dejamos solo los datos importantes
-			 LED_BrillarV(2,UNSEG); // Avisa que tengo un dato bien tomado del GPS
+			LED_BrillarV(2,UNSEG); // Avisa que tengo un dato bien tomado del GPS
 			ban_datogps=1;	 //indica q logro tomar un dato gps.
 			vueltasRTC=VUELTAS;      //para prueba
 			(void)GPS_SincronizarHM(); //Corregimos el RTC para despertar en horario de señal de muerte
 			
  ///////// CONTROLAMOS SI SE MOVIO EL MOVIL ////////////
-			LED_ApagarV();										  
+			LED_ApagarV();
+			
+			 
+			/*u32SD_Block = dir_lectura[0];
+			u32SD_Block <<= 8;
+			u32SD_Block |= dir_lectura[1];
+			u32SD_Block <<= 8;
+			u32SD_Block |= dir_lectura[2];
+			u32SD_Block <<= 8;
+			u32SD_Block |= dir_lectura[3];
+									
+			(void) SD_WriteSector(u32SD_Block, (UINT8 *) Buffer_GPS);
+			u32SD_Block ++;*/
+			//(void) SD_WriteSector(u32SD_Block ++, (UINT8 *) Buffer_GPS);
+			
 			if(GPS_CompararDato(dat,&ult_lat,&ult_lon)==_ERR_OK){// (va !=)comparamos con la medicion anterior para saber si me movil
 				cont_muerte=0;									 //ERROR OK->Iguales
 				if(ban_datodif==1){// esta bandera dice que ya cambio entonces a cont. escribimos el ultimo dato 
 					 ban_datodif=0; //igual y a cont. escribimos el dato distinto.
 					 if( GPS_EscribirBuffer(ult_dat,Buffer_GPS)==_ERR_OVF){// escribimos en el buffer, si esta lleno informa
-						  temp=(error) SD_Init();
+						  //temp=(error) SD_Init();
 						  //temp=SD_Prender();
 						  resp3=SD_Escribir(dir_escritura,Buffer_GPS);// escribimos la SD con el buffer lleno
-						  resp2=SD_CalculaDireccion(dir_escritura);// actualizamos la dir escritura de la SD
+						  //resp2=SD_CalculaDireccion(dir_escritura);// actualizamos la dir escritura de la SD
+						  resp2=SD_CalculaDireccion(dir_escritura, Buffer_GPS); // Usamos ese buffer xq necesitamos mandar 512 bytes y ya se guardo lo que tenia
 						  (void)GPS_EscribirBuffer(ult_dat,Buffer_GPS);// escribimos el dato q no se pudo guardar anteriormente
 					 }
 				}
-				 if( GPS_EscribirBuffer(dat,Buffer_GPS)==_ERR_OVF){
-					 temp=(error) SD_Init();
+				if( GPS_EscribirBuffer(dat,Buffer_GPS)!=_ERR_OVF){ //va ==
+					 //temp=(error) SD_Init();
 					 //temp=SD_Prender();
 					 resp3=SD_Escribir(dir_escritura,Buffer_GPS);
-					 resp2=SD_CalculaDireccion(dir_escritura);
+					 //resp2=SD_CalculaDireccion(dir_escritura);
+					 resp2=SD_CalculaDireccion(dir_escritura,Buffer_GPS);
 					 (void)GPS_EscribirBuffer(dat,Buffer_GPS);
 					 for(i=0;i<10;i++){
 						 LED_BrillarR(2,300); //Avisa que se esta escribiendo la SD
@@ -197,12 +216,12 @@ void main(void) {
 	 
  ////////// TERCERA PARTE: DORMIR DURANTE 15 MINUTOS //////////
 		
-		CPU_PrenderRTC(RTC_1SEG,1);//(RTC_1SEG,MINUTO);
+		 CPU_PrenderRTC(RTC_1SEG,1);//(RTC_1SEG,MINUTO);
 		 ban_vueltacomp=CORRIENDO;
 		 while(ban_vueltacomp!=FIN){  //me duermo durante 1 minuto x veces
 			 asm{STOP
 			 }
-		 }
+		 } 
     __RESET_WATCHDOG();	/* feeds the dog */
   } /* loop forever */
   /* please make sure that you never leave main */

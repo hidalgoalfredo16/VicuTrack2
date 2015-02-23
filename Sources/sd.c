@@ -12,6 +12,7 @@ extern byte ban_bufferTx;
 extern byte ban_SDvacia;
 extern byte dir_escritura[4];
 extern byte dir_lectura[4];
+extern dato Buffer_Envio[cantidad_datos][tam_dato];
 
 struct {
   UINT8 NUM_BLOCKS;
@@ -261,7 +262,7 @@ UINT8 SD_Init(void) {
   
   if(u8R1 & SD_R1_ERROR_MASK) return (SD_FAIL_INIT);
   
-  SPI_HighRate();	//Cambio el baudrate
+  //SPI_HighRate();	//Cambio el baudrate
   return (SD_OK);
 }
 
@@ -326,7 +327,8 @@ UINT8 SD_WriteSector(UINT32 u32SD_Block, UINT8 * pu8DataPointer) {
         return (SD_FAIL_WRITE);    
     }
 		
-		while(ReadSPIByte()==0x00) ;  // Dummy SPI cycle
+	while(ReadSPIByte()==0x00) ;  // Dummy SPI cycle
+    (void) ReadSPIByte();
     SPI_SS = DISABLE;
 	
     return (SD_OK);
@@ -370,7 +372,7 @@ error SD_Prender(){
 
 
 error SD_EnviarCMD(byte CMD,byte *ARG){
-    (void)SD_EnviarByte(CMD);
+	(void)SD_EnviarByte(CMD);
     (void)SD_EnviarByte(ARG[0]);
     (void)SD_EnviarByte(ARG[1]);
     (void)SD_EnviarByte(ARG[2]);
@@ -490,7 +492,7 @@ error SD_Leer(dato lectura[][tam_dato]) {
     (void)SD_DesAssert();
     (void)Cpu_Delay100US(100);
     
-    (void)SD_CalculaDireccion(dir_lectura);
+    //(void)SD_CalculaDireccion(dir_lectura); // CORREGIRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
      ban_bufferTx=0;
         
     return _ERR_OK;
@@ -502,8 +504,12 @@ error SD_Leer(dato lectura[][tam_dato]) {
 
 
 error SD_Escribir(byte *direccion, dato buf[][tam_dato]){
-    UINT32 u32SD_Block; // Convertimos la direccion en una variable de 32 bits
+	/*byte Rx;
+	int i=0 , h=0 , cantidad_espacios=0 , j=0;*/
+	UINT32 u32SD_Block; // Convertimos la direccion en una variable de 32 bits
+    byte tem;
     
+    InitSPI();
     u32SD_Block = direccion[0];
     u32SD_Block <<= 8;
     u32SD_Block |= direccion[1];
@@ -511,12 +517,11 @@ error SD_Escribir(byte *direccion, dato buf[][tam_dato]){
     u32SD_Block |= direccion[2];
     u32SD_Block <<= 8;
     u32SD_Block |= direccion[3];
-	
-    return (error) SD_WriteSector(u32SD_Block, buf);
-	
-    /*byte Rx;
-    int i=0 , h=0 , cantidad_espacios=0 , j=0;
-    (void)SD_EnviarCMD(CMD24,direccion);  // CMD24 para escribir
+    
+    tem = SD_WriteSector(u32SD_Block, (UINT8 *) buf);
+    
+    
+    /*(void)SD_EnviarCMD(CMD24,direccion);  // CMD24 para escribir
     // Debemos recibir respuesta R1
 		do{
 		    (void)SD_RecibirByte(&Rx);
@@ -540,7 +545,7 @@ error SD_Escribir(byte *direccion, dato buf[][tam_dato]){
     //enviamos 1 espacio y luego 1 salto de linea
     cantidad_espacios = TAM_BLOQUE-(((tam_dato)*cantidad_datos)+(cantidad_datos*2));
     for(j=0 ; j < cantidad_espacios ; j++) 
-        (void)SD_EnviarByte(0x20);
+    (void)SD_EnviarByte(0x20);
     (void)SD_EnviarByte(0x0D);
     (void)SD_EnviarByte(0x0A);
     (void)SD_EnviarByte(ID_H); // Se envian dos CRC que no estan calculados.
@@ -553,11 +558,12 @@ error SD_Escribir(byte *direccion, dato buf[][tam_dato]){
     do{ 
         (void)SD_RecibirByte(&Rx);
     }while(Rx == 0);
-    SD_DesAssert();  // Hacemos un Desassert (-SS=1 Activo en baja)
-	  (void)Cpu_Delay100US(100);
-	  SD_Assert();     // Hacemos un Assert (-SS=0 Activo en baja)
+    SD_DesAssert();  // Hacemos un Desassert (-SS=1 Activo en baja)*/
+	
+    (void)Cpu_Delay100US(100);
+	//SD_Assert();     // Hacemos un Assert (-SS=0 Activo en baja)
     ban_SDvacia=0;
-    return _ERR_OK;*/
+    return _ERR_OK;
 }
 
 
@@ -577,10 +583,11 @@ error SD_SetBaudRateMode(byte Mod){
 //-----------------------------   SD_CALCULARDIRECCION   -----------------------------//
 
 
-error SD_CalculaDireccion(byte * dir){
+error SD_CalculaDireccion(byte * dir, dato buf[][tam_dato]){
     //long *aux , aux2;
     //aux=dir;
 	long Auxiliar;
+	byte i;
 	
     Auxiliar = dir[0];
     Auxiliar <<= 8;
@@ -590,16 +597,25 @@ error SD_CalculaDireccion(byte * dir){
     Auxiliar <<= 8;
     Auxiliar |= dir[3];
     
-	Auxiliar += 512;
+	Auxiliar += 1;
 	
-    if(Auxiliar < 512)
-        return _ERR_DIR;
+    //if(Auxiliar < 512) Buscar cuantos sectores tiene la tarjeta
+        //return _ERR_DIR;
     dir[0]=(byte)(Auxiliar>>24);
     dir[1]=(byte)(Auxiliar>>16);
     dir[2]=(byte)(Auxiliar>>8);
     dir[3]=(byte)(Auxiliar);
-    (void)SD_Prender();
-    (void)SD_EscribirDireccion();
+    
+    SD_Assert();
+    
+    for(i=0;i<4;i++)
+    	buf[0][i] = dir_lectura[i];
+    for(;i<8;i++)
+    	buf[0][i] = dir_escritura[i];
+    
+    (void) SD_WriteSector((UINT32) 2600, (UINT8 *) buf); //2600 sector del archivo binario, hacer vble global
+    //(void)SD_Prender();				//Reemplazar por un Assert o SD_Init
+    //(void)SD_EscribirDireccion();		//Reemplazar por write sector
     return _ERR_OK;            
 }
 
@@ -663,50 +679,64 @@ return _ERR_OK;
 
 
 
-
+extern UINT32 direccion;
 error SD_LeerDireccion(){
-	byte arg[4],test;
-	byte dirbase[4];
+	//byte arg[4];
+	//byte dirbase[4];
+	//byte test;
+	UINT32 u32SD_Block;
     int h=0, i=0;
     (void)SD_Assert();
     // Leemos 512 bytes
-    arg[0]=0x00;
+    /*arg[0]=0x00;
     arg[1]=0x00;
     arg[2]=0x00;
     arg[3]=0x08;
     dirbase[0]=0x02;
     dirbase[1]=0x06;
-    dirbase[2]=0x00;
-    dirbase[3]=0x00;
-        
+    dirbase[2]=0x06;
+    dirbase[3]=0x04;*/
+    
+    u32SD_Block=2600; //Cargar la direccion del sector fisico donde se encuentran las direcciones de lectura y escritura
+    (void)SD_ReadSector(u32SD_Block, (UINT8 *) Buffer_Envio); //Lee el sector que contiene las direcciones de lectura y escritura
+    
+    //direccion = *((UINT32 *)(Buffer_Envio));
+    
+    for(i=0;i<4;i++)
+    	dir_lectura[i] = Buffer_Envio[0][i]; 
+    												//Se guardan las direcciones en las variables
+    for( ;i<8;i++)
+    	dir_escritura[i-4] = Buffer_Envio[0][i];
     
     // Enviar cmd16 y leeremos 8 bytes
-  	(void)SD_EnviarCMD(CMD16,arg);
+  	//(void)SD_EnviarCMD(CMD16,arg);
   	// esperamos la respuesta del cmd16
-  	h=0;
+  	/*h=0;
   	do{
   	    (void)SD_RecibirByte(&test);
     }while(test != 0 && h++ < TIMER_RESP);
   	if(h > TIMER_RESP)
-  	    return _ERR_TIMER;	
+  	    return _ERR_TIMER;	*/
+    
     // Trying to read a BLOCK
   	// Enviamos el cmd17 donde indicamos el inicio de la lectura
-  	(void)SD_EnviarCMD(CMD17,dirbase);
+    
+  	/*(void)SD_EnviarCMD(CMD17,dirbase);
   	// esperamos la respuesta R1 del cmd17 es decir un 0
   	h=0;
   	do{
   	    (void)SD_RecibirByte(&test);
-  	}while(test != 0 && h++ < TIMER_RESP);
+  	}while(test != 0x00 && h++ < TIMER_RESP);
     if(h > TIMER_RESP)
   	    return _ERR_TIMER;	
   	// Recibimos el FE?--->Data token for reading 11111110 =)
   	h=0;
   	do{
   	    (void)SD_RecibirByte(&test);
-  	}while(test != 254 && h++ < TIMER_RESP);
+  	}while(test != 0xFE && h++ < TIMER_RESP);
   	if(h > TIMER_RESP)
   	    return _ERR_TIMER;	
-    //Guardamos lo q leeemos segun TipoLectura     
+    //Guardamos lo q leemos segun TipoLectura     
     i=0;
   	while(i<4){
   	    (void)SD_RecibirByte(&test);
@@ -722,10 +752,22 @@ error SD_LeerDireccion(){
   	//(void)SD_RecibirByte(&test);
     do{
         (void)SD_RecibirByte(&test);
-    }while(test != 0xff);
+    }while(test != 0xff);*/
     (void)SD_DesAssert();
     (void)Cpu_Delay100US(100);
     ban_bufferTx=0;
+    
+    /*u32SD_Block=2601;
+    u32SD_Block = dir_lectura[0];
+	u32SD_Block <<= 8;
+	u32SD_Block |= dir_lectura[1];
+	u32SD_Block <<= 8;
+	u32SD_Block |= dir_lectura[2];
+	u32SD_Block <<= 8;
+	u32SD_Block |= dir_lectura[3];
+	
+    Buffer_Envio[0][0]=1;
+    (void) SD_WriteSector(u32SD_Block, (UINT8 *) Buffer_Envio);*/
     return _ERR_OK;
 }
 
@@ -739,17 +781,18 @@ error SD_EscribirDireccion(){
     dirbase[1]=0x06;
     dirbase[2]=0x00;
     dirbase[3]=0x00;
+    
     (void)SD_EnviarCMD(CMD24,dirbase);  // CMD24 para escribir
     // Debemos recibir respuesta R1
 		do{
 		    (void)SD_RecibirByte(&Rx);
-		}while(Rx != 0 && h++ < TIMER_RESP);
+		}while(Rx != 0x00 && h++ < TIMER_RESP);
     if(h > TIMER_RESP)
         return _ERR_TIMER;
     (void)SD_EnviarByte(TOKEN);   // Enviar el FE--->Data token for write 11111110 =)
     //Intentamos escribir
         
-	for(i=0 ; i < cantidad_datos ; i++){
+	for(i=0 ; i < cantidad_datos ; i++){ 	//Cantidad Datos = 14
         h=8;    
         
         (void)SD_EnviarByte(dir_lectura[0]);
@@ -764,7 +807,7 @@ error SD_EscribirDireccion(){
         do{
 	          (void)SD_EnviarByte(0x00);
 	          h++;  
-	      }while(h < (tam_dato));
+	      }while(h < (tam_dato));			//Tam_dato = 32
 	      if(i < (cantidad_datos-1)){ 
 	          (void)SD_EnviarByte(0x0D);  
 	          (void)SD_EnviarByte(0x0A);
