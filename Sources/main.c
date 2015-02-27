@@ -43,15 +43,11 @@ void main(void) {
   error resp2, resp3;
   long ult_lat=0,ult_lon=0;
   trama_reducida tr[tam_trama_reducida];
-  PTCDD_PTCDD4 = 1;
-  PTCD_PTCD4 = 1;
   temp=Init_CPU();
   temp=Init_Trans();
   temp=Init_LED();
   temp=Init_GPS();
   temp=(error) SD_Init();
-  //temp=(error) SD_Init();
-  //temp=SD_Prender();
   LED_BrillarV(2,UNSEG);
   (void)SD_LeerDireccion();
   ult_lat=0;
@@ -85,7 +81,7 @@ void main(void) {
 			CPU_PrenderRTC(RTC_1SEG,1); //120
 		 
 		 
-		 EnableInterrupts;
+		EnableInterrupts;
 		ban_esperafix=0;
 		while(ban_esperafix==0){
 			
@@ -100,7 +96,7 @@ void main(void) {
 			 (void)GPS_Recibir(tc);// recibo datos en crudo del GPS durante 5 intentos
 				  
 		}while(GPS_Analizar(tr,tc) != _ERR_OK && intentos_gps++<5);// analizamos si son datos validos 5 veces
-		(void)GPS_Apagar();
+		//(void)GPS_Apagar();
 		 if(intentos_gps<5){
 			resp2 = GPS_Dato(dat,tr);// limpiamos la trama y dejamos solo los datos importantes
 			LED_BrillarV(2,UNSEG); // Avisa que tengo un dato bien tomado del GPS
@@ -110,20 +106,6 @@ void main(void) {
 			
  ///////// CONTROLAMOS SI SE MOVIO EL MOVIL ////////////
 			LED_ApagarV();
-			
-			 
-			/*u32SD_Block = dir_lectura[0];
-			u32SD_Block <<= 8;
-			u32SD_Block |= dir_lectura[1];
-			u32SD_Block <<= 8;
-			u32SD_Block |= dir_lectura[2];
-			u32SD_Block <<= 8;
-			u32SD_Block |= dir_lectura[3];
-									
-			(void) SD_WriteSector(u32SD_Block, (UINT8 *) Buffer_GPS);
-			u32SD_Block ++;*/
-			//(void) SD_WriteSector(u32SD_Block ++, (UINT8 *) Buffer_GPS);
-			
 			if(GPS_CompararDato(dat,&ult_lat,&ult_lon)==_ERR_OK){// (va !=)comparamos con la medicion anterior para saber si me movil
 				cont_muerte=0;									 //ERROR OK->Iguales
 				if(ban_datodif==1){// esta bandera dice que ya cambio entonces a cont. escribimos el ultimo dato 
@@ -149,7 +131,8 @@ void main(void) {
 						 LED_BrillarV(2,300);  
 					}
 				}
-			}else{
+			}
+			else{
 				cont_muerte++;
 				(void)GPS_CopiarDato(dat,ult_dat);//guardo el ultimo dato por
 				ban_datodif=1;                    // si cambia de posicion en la prox.

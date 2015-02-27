@@ -32,7 +32,7 @@ _startupData is allocated at 0x8088 and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
   _Range   pZeroOut       0x100     1295
-  _Copy    *toCopyDownBeg 0xA0C7
+  _Copy    *toCopyDownBeg 0xA0F9
 } _startupData;
 
 *********************************************************************************************
@@ -42,8 +42,8 @@ Section Name                    Size  Type     From       To       Segment
 .data                              1   R/W      0x100      0x100   RAM
 .init                            136     R     0x8000     0x8087   ROM
 .startData                        14     R     0x8088     0x8095   ROM
-.text                           8241     R     0x8096     0xA0C6   ROM
-.copy                              7     R     0xA0C7     0xA0CD   ROM
+.text                           8291     R     0x8096     0xA0F8   ROM
+.copy                              7     R     0xA0F9     0xA0FF   ROM
 .abs_section_ffce                  2     R     0xFFCE     0xFFCF   .absSeg0
 .abs_section_ffd2                  2     R     0xFFD2     0xFFD3   .absSeg1
 .abs_section_ffd4                  2     R     0xFFD4     0xFFD5   .absSeg2
@@ -186,7 +186,7 @@ Section Name                    Size  Type     From       To       Segment
 .vectSeg136_vect                   2     R     0xFFFE     0xFFFF   .vectSeg136
 
 Summary of section sizes per section type:
-READ_ONLY (R):        20D6 (dec:     8406)
+READ_ONLY (R):        2108 (dec:     8456)
 READ_WRITE (R/W):      510 (dec:     1296)
 NO_INIT (N/I):          A0 (dec:      160)
 
@@ -247,32 +247,32 @@ MODULE:                 -- gps_c.obj --
 - PROCEDURES:
      Init_GPS                                  849D      14      20       1   .text       
      GPS_Prender                               84B1       5       5       2   .text       
-     GPS_Apagar                                84B6       5       5       2   .text       
+     GPS_Apagar                                84B6       5       5       1   .text       
      GPS_Recibir                               84BB      62      98       2   .text       
-     GPS_Analizar                              851D     13C     316       4   .text       
-     GPS_Dato                                  8659     1BD     445       2   .text       
-     GPS_EscribirBuffer                        8816     12F     303       5   .text       
-     GPS_CompararBase                          8945     161     353       1   .text       
-     GPS_CompararDato                          8AA6     17C     380       1   .text       
-     GPS_CopiarDato                            8C22      44      68       1   .text       
-     GPS_SincronizarHM                         8C66      C7     199       1   .text       
+     GPS_Analizar                              851D     16F     367      10   .text       
+     GPS_Dato                                  868C     1BD     445       2   .text       
+     GPS_EscribirBuffer                        8849     12F     303       5   .text       
+     GPS_CompararBase                          8978     161     353       1   .text       
+     GPS_CompararDato                          8AD9     17C     380       1   .text       
+     GPS_CopiarDato                            8C55      44      68       1   .text       
+     GPS_SincronizarHM                         8C99      C7     199       1   .text       
 - VARIABLES:
      i.1                                        109       2       2       8   .bss        
      vueltasRTC                                 11D       1       1       6   .common     
-     ban_fix                                    11E       1       1       3   .common     
+     ban_fix                                    11E       1       1       4   .common     
 MODULE:                 -- led_c.obj --
 - PROCEDURES:
-     Init_LED                                  8D2D       7       7       1   .text       
-     LED_PrenderR                              8D34       3       3       2   .text       
-     LED_ApagarR                               8D37       3       3       2   .text       
-     LED_PrenderV                              8D3A       3       3       2   .text       
-     LED_ApagarV                               8D3D       3       3       3   .text       
-     LED_BrillarR                              8D40      2F      47       3   .text       
-     LED_BrillarV                              8D6F      2F      47       4   .text       
+     Init_LED                                  8D60       7       7       1   .text       
+     LED_PrenderR                              8D67       3       3       2   .text       
+     LED_ApagarR                               8D6A       3       3       2   .text       
+     LED_PrenderV                              8D6D       3       3       2   .text       
+     LED_ApagarV                               8D70       3       3       3   .text       
+     LED_BrillarR                              8D73      2F      47       3   .text       
+     LED_BrillarV                              8DA2      2F      47       4   .text       
 - VARIABLES:
 MODULE:                 -- main_c.obj --
 - PROCEDURES:
-     main                                      8D9E     32B     811      10   .text       
+     main                                      8DD1     32A     810      10   .text       
 - VARIABLES:
      ban_horasm                                 100       1       1       4   .data       
      Buffer_Envio                               11F     1C0     448       5   .common     
@@ -285,33 +285,33 @@ MODULE:                 -- main_c.obj --
      dir_lectura                                606       4       4       7   .common     
 MODULE:                 -- muerte_c.obj --
 - PROCEDURES:
-     RUTINA_MUERTE                             90C9     26D     621       3   .text       
-     MUERTE_TransceiverEnviar                  9336      2C      44       1   .text       
-     MUERTE_ArmarPaquete                       9362      49      73       1   .text       
+     RUTINA_MUERTE                             90FB     26D     621       3   .text       
+     MUERTE_TransceiverEnviar                  9368      2C      44       1   .text       
+     MUERTE_ArmarPaquete                       9394      49      73       1   .text       
 - VARIABLES:
      diferencia                                 60A       2       2       5   .common     
 MODULE:                 -- sd_c.obj --
 - PROCEDURES:
-     SD_SendCommand                            93AB      FA     250      10   .text       
-     SD_ReadData                               94A5      86     134       2   .text       
-     SD_Init                                   952B     2CD     717       3   .text       
-     SD_ReadSector                             97F8      77     119       1   .text       
-     SD_WriteSector                            986F      9A     154       2   .text       
-     SD_EnviarCMD                              9909      3B      59       2   .text       
-     SD_EnviarByte                             9944      11      17       7   .text       
-     SD_RecibirByte                            9955      13      19       7   .text       
-     SD_Leer                                   9968     14A     330       3   .text       
-     SD_Escribir                               9AB2      D6     214       2   .text       
-     SD_CalculaDireccion                       9B88     157     343       2   .text       
-     SD_Condatos                               9CDF      47      71       2   .text       
-     SD_LeerDireccion                          9D26      79     121       1   .text       
+     SD_SendCommand                            93DD      FA     250      10   .text       
+     SD_ReadData                               94D7      86     134       2   .text       
+     SD_Init                                   955D     2CD     717       3   .text       
+     SD_ReadSector                             982A      77     119       1   .text       
+     SD_WriteSector                            98A1      9A     154       2   .text       
+     SD_EnviarCMD                              993B      3B      59       2   .text       
+     SD_EnviarByte                             9976      11      17       7   .text       
+     SD_RecibirByte                            9987      13      19       7   .text       
+     SD_Leer                                   999A     14A     330       3   .text       
+     SD_Escribir                               9AE4      D6     214       2   .text       
+     SD_CalculaDireccion                       9BBA     157     343       2   .text       
+     SD_Condatos                               9D11      47      71       2   .text       
+     SD_LeerDireccion                          9D58      79     121       1   .text       
 - VARIABLES:
      gSDCard                                    60C       3       3       9   .common     
 MODULE:                 -- spi_c.obj --
 - PROCEDURES:
-     SPI_Init                                  9D9F       D      13       2   .text       
-     SPI_SendByte                              9DAC       E      14       9   .text       
-     SPI_ReceiveByte                           9DBA       C      12       9   .text       
+     SPI_Init                                  9DD1       D      13       2   .text       
+     SPI_SendByte                              9DDE       E      14       9   .text       
+     SPI_ReceiveByte                           9DEC       C      12       9   .text       
 - VARIABLES:
 MODULE:                 -- start08_c.obj --
 - PROCEDURES:
@@ -329,8 +329,8 @@ MODULE:                 -- mc9s08qe32_c.obj --
      _PTADD                                       1       1       1       2   .abs_section_1
      _PTBD                                        2       1       1      31   .abs_section_2
      _PTBDD                                       3       1       1       1   .abs_section_3
-     _PTCD                                        4       1       1       7   .abs_section_4
-     _PTCDD                                       5       1       1       4   .abs_section_5
+     _PTCD                                        4       1       1       6   .abs_section_4
+     _PTCDD                                       5       1       1       3   .abs_section_5
      _PTDD                                        6       1       1       0   .abs_section_6
      _PTDDD                                       7       1       1       0   .abs_section_7
      _PTED                                        8       1       1       0   .abs_section_8
@@ -460,37 +460,37 @@ MODULE:                 -- mc9s08qe32_c.obj --
      _SCI2BD                                   1870       2       2       2   .abs_section_1870
 MODULE:                 -- rtshc08.o (ansiis.lib) --
 - PROCEDURES:
-     _PUSH_ARGS_L                              9DC6      20      32       2   .text       
-     _ENTER_UNARY_L                            9DE6      29      41       5   .text       
-     _ENTER_BINARY_L                           9E0F      16      22       5   .text       
-     _ENTER_BINARY_L_RC                        9E25      19      25       4   .text       
-     _LADD_k_is_k_plus_j                       9E3E      1F      31       1   .text       
-     _k_is_k_plus_j_l                          9E5D      1E      30       2   .text       
-     _k_is_k_plus_j_i                          9E7B      12      18       3   .text       
-     _LSUB_k_is_k_minus_j                      9E8D      1F      31       2   .text       
-     _LAND_k_is_k_and_j                        9EAC      1F      31       1   .text       
-     _LOR_k_is_k_or_j                          9ECB      1F      31       1   .text       
-     _LMUL_k_is_k_mul_j                        9EEA      81     129       2   .text       
-     _LCMP_k_rel_j                             9F6B      1F      31       2   .text       
-     _IMUL_STAR08                              9F8A      27      39       9   .text       
-     _ILSL                                     9FB1       C      12       6   .text       
-     _ICMP                                     9FBD      16      22       8   .text       
-     _LINC                                     9FD3      16      22       4   .text       
-     _LNEG                                     9FE9      1C      28       4   .text       
-     _LADD                                     A005       6       6       6   .text       
-     _LSUB                                     A00B       6       6       4   .text       
-     _LSUB_RC                                  A011       6       6       4   .text       
-     _LAND_RC                                  A017       6       6       7   .text       
-     _LOR                                      A01D       6       6       6   .text       
-     _LMUL                                     A023       6       6       4   .text       
-     _LMUL_RC                                  A029       6       6       4   .text       
-     _LASR                                     A02F      16      22       3   .text       
-     _LLSR                                     A045      16      22       2   .text       
-     _LLSL                                     A05B      16      22       8   .text       
-     _LCMP                                     A071       6       6       1   .text       
-     _LCMP_RC                                  A077       6       6       7   .text       
-     _COPY                                     A07D      30      48       2   .text       
-     _POP32                                    A0AD      1A      26      34   .text       
+     _PUSH_ARGS_L                              9DF8      20      32       2   .text       
+     _ENTER_UNARY_L                            9E18      29      41       5   .text       
+     _ENTER_BINARY_L                           9E41      16      22       5   .text       
+     _ENTER_BINARY_L_RC                        9E57      19      25       4   .text       
+     _LADD_k_is_k_plus_j                       9E70      1F      31       1   .text       
+     _k_is_k_plus_j_l                          9E8F      1E      30       2   .text       
+     _k_is_k_plus_j_i                          9EAD      12      18       3   .text       
+     _LSUB_k_is_k_minus_j                      9EBF      1F      31       2   .text       
+     _LAND_k_is_k_and_j                        9EDE      1F      31       1   .text       
+     _LOR_k_is_k_or_j                          9EFD      1F      31       1   .text       
+     _LMUL_k_is_k_mul_j                        9F1C      81     129       2   .text       
+     _LCMP_k_rel_j                             9F9D      1F      31       2   .text       
+     _IMUL_STAR08                              9FBC      27      39       9   .text       
+     _ILSL                                     9FE3       C      12       6   .text       
+     _ICMP                                     9FEF      16      22       8   .text       
+     _LINC                                     A005      16      22       4   .text       
+     _LNEG                                     A01B      1C      28       4   .text       
+     _LADD                                     A037       6       6       6   .text       
+     _LSUB                                     A03D       6       6       4   .text       
+     _LSUB_RC                                  A043       6       6       4   .text       
+     _LAND_RC                                  A049       6       6       7   .text       
+     _LOR                                      A04F       6       6       6   .text       
+     _LMUL                                     A055       6       6       4   .text       
+     _LMUL_RC                                  A05B       6       6       4   .text       
+     _LASR                                     A061      16      22       3   .text       
+     _LLSR                                     A077      16      22       2   .text       
+     _LLSL                                     A08D      16      22       8   .text       
+     _LCMP                                     A0A3       6       6       1   .text       
+     _LCMP_RC                                  A0A9       6       6       7   .text       
+     _COPY                                     A0AF      30      48       2   .text       
+     _POP32                                    A0DF      1A      26      34   .text       
 - VARIABLES:
 
 *********************************************************************************************
@@ -499,9 +499,9 @@ MODULE STATISTIC
 ---------------------------------------------------------------------------------------------
   CPU_c.obj                                   22    504      6
   Transceiver_c.obj                            4    527      0
-  gps_c.obj                                    4   2192      0
+  gps_c.obj                                    4   2243      0
   led_c.obj                                    0    113      0
-  main_c.obj                                1260    811      0
+  main_c.obj                                1260    810      0
   muerte_c.obj                                 2    738      0
   sd_c.obj                                     3   2548      0
   spi_c.obj                                    0     39      0
@@ -823,8 +823,8 @@ OBJECT LIST SORTED BY ADDRESS
      _PTADD                                       1       1       1       2   .abs_section_1
      _PTBD                                        2       1       1      31   .abs_section_2
      _PTBDD                                       3       1       1       1   .abs_section_3
-     _PTCD                                        4       1       1       7   .abs_section_4
-     _PTCDD                                       5       1       1       4   .abs_section_5
+     _PTCD                                        4       1       1       6   .abs_section_4
+     _PTCDD                                       5       1       1       3   .abs_section_5
      _PTDD                                        6       1       1       0   .abs_section_6
      _PTDDD                                       7       1       1       0   .abs_section_7
      _PTED                                        8       1       1       0   .abs_section_8
@@ -919,7 +919,7 @@ OBJECT LIST SORTED BY ADDRESS
      ban_finao                                  11B       1       1      11   .common     
      ban_esperafix                              11C       1       1       3   .common     
      vueltasRTC                                 11D       1       1       6   .common     
-     ban_fix                                    11E       1       1       3   .common     
+     ban_fix                                    11E       1       1       4   .common     
      Buffer_Envio                               11F     1C0     448       5   .common     
      Buffer_GPS                                 2DF     1C0     448       8   .common     
      Buffer_Rx                                  49F      23      35       4   .common     
@@ -1005,73 +1005,73 @@ OBJECT LIST SORTED BY ADDRESS
      Transceiver_AnalizarACK                   8461      3C      60       1   .text       
      Init_GPS                                  849D      14      20       1   .text       
      GPS_Prender                               84B1       5       5       2   .text       
-     GPS_Apagar                                84B6       5       5       2   .text       
+     GPS_Apagar                                84B6       5       5       1   .text       
      GPS_Recibir                               84BB      62      98       2   .text       
-     GPS_Analizar                              851D     13C     316       4   .text       
-     GPS_Dato                                  8659     1BD     445       2   .text       
-     GPS_EscribirBuffer                        8816     12F     303       5   .text       
-     GPS_CompararBase                          8945     161     353       1   .text       
-     GPS_CompararDato                          8AA6     17C     380       1   .text       
-     GPS_CopiarDato                            8C22      44      68       1   .text       
-     GPS_SincronizarHM                         8C66      C7     199       1   .text       
-     Init_LED                                  8D2D       7       7       1   .text       
-     LED_PrenderR                              8D34       3       3       2   .text       
-     LED_ApagarR                               8D37       3       3       2   .text       
-     LED_PrenderV                              8D3A       3       3       2   .text       
-     LED_ApagarV                               8D3D       3       3       3   .text       
-     LED_BrillarR                              8D40      2F      47       3   .text       
-     LED_BrillarV                              8D6F      2F      47       4   .text       
-     main                                      8D9E     32B     811      10   .text       
-     RUTINA_MUERTE                             90C9     26D     621       3   .text       
-     MUERTE_TransceiverEnviar                  9336      2C      44       1   .text       
-     MUERTE_ArmarPaquete                       9362      49      73       1   .text       
-     SD_SendCommand                            93AB      FA     250      10   .text       
-     SD_ReadData                               94A5      86     134       2   .text       
-     SD_Init                                   952B     2CD     717       3   .text       
-     SD_ReadSector                             97F8      77     119       1   .text       
-     SD_WriteSector                            986F      9A     154       2   .text       
-     SD_EnviarCMD                              9909      3B      59       2   .text       
-     SD_EnviarByte                             9944      11      17       7   .text       
-     SD_RecibirByte                            9955      13      19       7   .text       
-     SD_Leer                                   9968     14A     330       3   .text       
-     SD_Escribir                               9AB2      D6     214       2   .text       
-     SD_CalculaDireccion                       9B88     157     343       2   .text       
-     SD_Condatos                               9CDF      47      71       2   .text       
-     SD_LeerDireccion                          9D26      79     121       1   .text       
-     SPI_Init                                  9D9F       D      13       2   .text       
-     SPI_SendByte                              9DAC       E      14       9   .text       
-     SPI_ReceiveByte                           9DBA       C      12       9   .text       
-     _PUSH_ARGS_L                              9DC6      20      32       2   .text       
-     _ENTER_UNARY_L                            9DE6      29      41       5   .text       
-     _ENTER_BINARY_L                           9E0F      16      22       5   .text       
-     _ENTER_BINARY_L_RC                        9E25      19      25       4   .text       
-     _LADD_k_is_k_plus_j                       9E3E      1F      31       1   .text       
-     _k_is_k_plus_j_l                          9E5D      1E      30       2   .text       
-     _k_is_k_plus_j_i                          9E7B      12      18       3   .text       
-     _LSUB_k_is_k_minus_j                      9E8D      1F      31       2   .text       
-     _LAND_k_is_k_and_j                        9EAC      1F      31       1   .text       
-     _LOR_k_is_k_or_j                          9ECB      1F      31       1   .text       
-     _LMUL_k_is_k_mul_j                        9EEA      81     129       2   .text       
-     _LCMP_k_rel_j                             9F6B      1F      31       2   .text       
-     _IMUL_STAR08                              9F8A      27      39       9   .text       
-     _ILSL                                     9FB1       C      12       6   .text       
-     _ICMP                                     9FBD      16      22       8   .text       
-     _LINC                                     9FD3      16      22       4   .text       
-     _LNEG                                     9FE9      1C      28       4   .text       
-     _LADD                                     A005       6       6       6   .text       
-     _LSUB                                     A00B       6       6       4   .text       
-     _LSUB_RC                                  A011       6       6       4   .text       
-     _LAND_RC                                  A017       6       6       7   .text       
-     _LOR                                      A01D       6       6       6   .text       
-     _LMUL                                     A023       6       6       4   .text       
-     _LMUL_RC                                  A029       6       6       4   .text       
-     _LASR                                     A02F      16      22       3   .text       
-     _LLSR                                     A045      16      22       2   .text       
-     _LLSL                                     A05B      16      22       8   .text       
-     _LCMP                                     A071       6       6       1   .text       
-     _LCMP_RC                                  A077       6       6       7   .text       
-     _COPY                                     A07D      30      48       2   .text       
-     _POP32                                    A0AD      1A      26      34   .text       
+     GPS_Analizar                              851D     16F     367      10   .text       
+     GPS_Dato                                  868C     1BD     445       2   .text       
+     GPS_EscribirBuffer                        8849     12F     303       5   .text       
+     GPS_CompararBase                          8978     161     353       1   .text       
+     GPS_CompararDato                          8AD9     17C     380       1   .text       
+     GPS_CopiarDato                            8C55      44      68       1   .text       
+     GPS_SincronizarHM                         8C99      C7     199       1   .text       
+     Init_LED                                  8D60       7       7       1   .text       
+     LED_PrenderR                              8D67       3       3       2   .text       
+     LED_ApagarR                               8D6A       3       3       2   .text       
+     LED_PrenderV                              8D6D       3       3       2   .text       
+     LED_ApagarV                               8D70       3       3       3   .text       
+     LED_BrillarR                              8D73      2F      47       3   .text       
+     LED_BrillarV                              8DA2      2F      47       4   .text       
+     main                                      8DD1     32A     810      10   .text       
+     RUTINA_MUERTE                             90FB     26D     621       3   .text       
+     MUERTE_TransceiverEnviar                  9368      2C      44       1   .text       
+     MUERTE_ArmarPaquete                       9394      49      73       1   .text       
+     SD_SendCommand                            93DD      FA     250      10   .text       
+     SD_ReadData                               94D7      86     134       2   .text       
+     SD_Init                                   955D     2CD     717       3   .text       
+     SD_ReadSector                             982A      77     119       1   .text       
+     SD_WriteSector                            98A1      9A     154       2   .text       
+     SD_EnviarCMD                              993B      3B      59       2   .text       
+     SD_EnviarByte                             9976      11      17       7   .text       
+     SD_RecibirByte                            9987      13      19       7   .text       
+     SD_Leer                                   999A     14A     330       3   .text       
+     SD_Escribir                               9AE4      D6     214       2   .text       
+     SD_CalculaDireccion                       9BBA     157     343       2   .text       
+     SD_Condatos                               9D11      47      71       2   .text       
+     SD_LeerDireccion                          9D58      79     121       1   .text       
+     SPI_Init                                  9DD1       D      13       2   .text       
+     SPI_SendByte                              9DDE       E      14       9   .text       
+     SPI_ReceiveByte                           9DEC       C      12       9   .text       
+     _PUSH_ARGS_L                              9DF8      20      32       2   .text       
+     _ENTER_UNARY_L                            9E18      29      41       5   .text       
+     _ENTER_BINARY_L                           9E41      16      22       5   .text       
+     _ENTER_BINARY_L_RC                        9E57      19      25       4   .text       
+     _LADD_k_is_k_plus_j                       9E70      1F      31       1   .text       
+     _k_is_k_plus_j_l                          9E8F      1E      30       2   .text       
+     _k_is_k_plus_j_i                          9EAD      12      18       3   .text       
+     _LSUB_k_is_k_minus_j                      9EBF      1F      31       2   .text       
+     _LAND_k_is_k_and_j                        9EDE      1F      31       1   .text       
+     _LOR_k_is_k_or_j                          9EFD      1F      31       1   .text       
+     _LMUL_k_is_k_mul_j                        9F1C      81     129       2   .text       
+     _LCMP_k_rel_j                             9F9D      1F      31       2   .text       
+     _IMUL_STAR08                              9FBC      27      39       9   .text       
+     _ILSL                                     9FE3       C      12       6   .text       
+     _ICMP                                     9FEF      16      22       8   .text       
+     _LINC                                     A005      16      22       4   .text       
+     _LNEG                                     A01B      1C      28       4   .text       
+     _LADD                                     A037       6       6       6   .text       
+     _LSUB                                     A03D       6       6       4   .text       
+     _LSUB_RC                                  A043       6       6       4   .text       
+     _LAND_RC                                  A049       6       6       7   .text       
+     _LOR                                      A04F       6       6       6   .text       
+     _LMUL                                     A055       6       6       4   .text       
+     _LMUL_RC                                  A05B       6       6       4   .text       
+     _LASR                                     A061      16      22       3   .text       
+     _LLSR                                     A077      16      22       2   .text       
+     _LLSL                                     A08D      16      22       8   .text       
+     _LCMP                                     A0A3       6       6       1   .text       
+     _LCMP_RC                                  A0A9       6       6       7   .text       
+     _COPY                                     A0AF      30      48       2   .text       
+     _POP32                                    A0DF      1A      26      34   .text       
      _Vector_24                                FFCE       2       2       0   .abs_section_ffce
      _Vector_22                                FFD2       2       2       0   .abs_section_ffd2
      _Vector_21                                FFD4       2       2       0   .abs_section_ffd4
@@ -1116,13 +1116,13 @@ rtshc08.o (ansiis.lib):
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xA0C7 ---- SIZE       4 ---
+------- ROM-ADDRESS: 0xA0F9 ---- SIZE       4 ---
 Filling bytes inserted
  00010100
-------- ROM-ADDRESS: 0xA0CB ---- RAM-ADDRESS: 0x100 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xA0FD ---- RAM-ADDRESS: 0x100 ---- SIZE       1 ---
 Name of initialized Object : ban_horasm
  04
-------- ROM-ADDRESS: 0xA0CC ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xA0FE ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -1177,18 +1177,17 @@ LED_PrenderV              USES _PTCD
 LED_ApagarV               USES _PTCD 
 LED_BrillarR              USES LED_PrenderR Cpu_Delay100US LED_ApagarR 
 LED_BrillarV              USES LED_PrenderV Cpu_Delay100US LED_ApagarV 
-main                      USES _PTCDD _PTCD Init_CPU Init_Trans Init_LED 
-                                Init_GPS SD_Init LED_BrillarV SD_LeerDireccion 
-                                vueltasRTC ban_horasm CPU_ApagarRTC GPS_Prender ban_fix 
-                                CPU_PrenderRTC ban_esperafix tc GPS_Recibir GPS_Analizar 
-                                GPS_Apagar main dat GPS_Dato GPS_SincronizarHM 
-                                LED_ApagarV GPS_CompararDato ult_dat Buffer_GPS 
-                                GPS_EscribirBuffer dir_escritura SD_Escribir SD_CalculaDireccion 
-                                LED_BrillarR GPS_CopiarDato GPS_CompararBase ban_bufferTx 
-                                ban_SDvacia Transceiver_Prender ban_turno index_Rx ban_ACK 
-                                Buffer_Rx Transceiver_Analizar SD_Condatos Buffer_Envio 
-                                SD_Leer Transceiver_Enviar Transceiver_Apagar 
-                                RUTINA_MUERTE ban_vueltacomp _SRS 
+main                      USES Init_CPU Init_Trans Init_LED Init_GPS SD_Init 
+                                LED_BrillarV SD_LeerDireccion vueltasRTC ban_horasm 
+                                CPU_ApagarRTC GPS_Prender ban_fix CPU_PrenderRTC 
+                                ban_esperafix tc GPS_Recibir GPS_Analizar main dat GPS_Dato 
+                                GPS_SincronizarHM LED_ApagarV GPS_CompararDato ult_dat 
+                                Buffer_GPS GPS_EscribirBuffer dir_escritura SD_Escribir 
+                                SD_CalculaDireccion LED_BrillarR GPS_CopiarDato GPS_CompararBase 
+                                ban_bufferTx ban_SDvacia Transceiver_Prender ban_turno 
+                                index_Rx ban_ACK Buffer_Rx Transceiver_Analizar 
+                                SD_Condatos Buffer_Envio SD_Leer Transceiver_Enviar 
+                                Transceiver_Apagar RUTINA_MUERTE ban_vueltacomp _SRS 
 RUTINA_MUERTE             USES dat _IMUL_STAR08 diferencia ban_finao 
                                 CPU_PrenderRTC CPU_ApagarRTC GPS_Prender tc GPS_Recibir 
                                 GPS_Analizar GPS_Apagar RUTINA_MUERTE GPS_Dato 
@@ -1353,8 +1352,6 @@ DEPENDENCY TREE
  |  |  +- _LCMP_RC             (see above)
  |  |     
  |  +- GPS_Analizar        
- |  |    
- |  +- GPS_Apagar          
  |  |    
  |  +- GPS_Dato            
  |  |    
@@ -1564,8 +1561,8 @@ DEPENDENCY TREE
  |     |  
  |     +- GPS_Analizar         (see above)
  |     |  
- |     +- GPS_Apagar           (see above)
- |     |  
+ |     +- GPS_Apagar          
+ |     |    
  |     +- GPS_Dato             (see above)
  |     |  
  |     +- MUERTE_ArmarPaquete 
@@ -1609,5 +1606,5 @@ STATISTIC SECTION
 ExeFile:
 --------
 Number of blocks to be downloaded: 7
-Total size of all blocks to be downloaded: 8406
+Total size of all blocks to be downloaded: 8456
 
