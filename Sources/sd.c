@@ -520,45 +520,7 @@ error SD_Escribir(byte *direccion, dato buf[][tam_dato]){
     
     tem = SD_WriteSector(u32SD_Block, (UINT8 *) buf);
     
-    
-    /*(void)SD_EnviarCMD(CMD24,direccion);  // CMD24 para escribir
-    // Debemos recibir respuesta R1
-		do{
-		    (void)SD_RecibirByte(&Rx);
-		}while(Rx != 0 && h++ < TIMER_RESP);
-    if(h > TIMER_RESP)
-        return _ERR_TIMER;
-    (void)SD_EnviarByte(TOKEN);   // Enviar el FE--->Data token for write 11111110 =)
-    //Intentamos escribir
-    for(i=0 ; i < cantidad_datos ; i++){
-        h=0;    
-        do{
-	          (void)SD_EnviarByte(buf[i][h]);
-	          h++;  
-	      }while(h < (tam_dato));
-	      if(i < (cantidad_datos-1)){ 
-	          (void)SD_EnviarByte(0x0D);  
-	          (void)SD_EnviarByte(0x0A);
-	      } // cierra el IF
-    } // cierra el FOR
-    //Para completar el bloque de 512
-    //enviamos 1 espacio y luego 1 salto de linea
-    cantidad_espacios = TAM_BLOQUE-(((tam_dato)*cantidad_datos)+(cantidad_datos*2));
-    for(j=0 ; j < cantidad_espacios ; j++) 
-    (void)SD_EnviarByte(0x20);
-    (void)SD_EnviarByte(0x0D);
-    (void)SD_EnviarByte(0x0A);
-    (void)SD_EnviarByte(ID_H); // Se envian dos CRC que no estan calculados.
-    (void)SD_EnviarByte(ID_L);
-    //Esperamos que la tarjeta termine de escribir
-    h=0;
-    do{
-		    (void)SD_RecibirByte(&Rx);
-		}while(Rx == 0xFF && h++ < TIMER_RESP);
-    do{ 
-        (void)SD_RecibirByte(&Rx);
-    }while(Rx == 0);
-    SD_DesAssert();  // Hacemos un Desassert (-SS=1 Activo en baja)*/
+    //SD_DesAssert();  // Hacemos un Desassert (-SS=1 Activo en baja)
 	
     (void)Cpu_Delay100US(100);
 	//SD_Assert();     // Hacemos un Assert (-SS=0 Activo en baja)

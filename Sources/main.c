@@ -49,6 +49,7 @@ void main(void) {
   temp=Init_GPS();
   temp=(error) SD_Init();
   LED_BrillarV(2,UNSEG);
+  LED_BrillarR(2,UNSEG);
   (void)SD_LeerDireccion();
   ult_lat=0;
   ult_lon=0;

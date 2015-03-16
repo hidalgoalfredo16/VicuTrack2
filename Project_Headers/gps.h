@@ -79,7 +79,14 @@ error GPS_Analizar(trama_reducida *tr,trama_crudo* tc);
 
 //! Se obtiene la parte no variable de la trama GPRMC
 /*!
-Se eliminan 3 datos de la trama GPRMC (no se cuales son)
+Se toman solo los datos importantes de la trama (hora,minutos,latitud, longitud y Fecha) sin puntos ni coma
+
+$GPRMC,205550.000,A,0443.9191,N,07402.8330,W,0.00,,240113,,,A*6A
+-Hora y minutos:2055
+-Latitud: 04439191N
+-Longitud: 074028330W
+-Fecha: 240113
+
 @param[in] d es el vector donde se almacenarán los datos de la trama GPRMC que nos interesa
 @param[in] tr tr es el vector donde se almacena la trama GPRMC
 @return Indica si hubo un error
@@ -147,7 +154,7 @@ Si la comparacion está entre 0 y 6 horas retorna OK, caso contrario retorna erro
 
 error GPS_VerificarHora();
 
-//! Correge el RTC para despertar en horario de señal de muerte
+//! Corrige el RTC para despertar en horario de señal de muerte
 /*!
 @return Indica si hubo un error
     @li @c 1 No se produjo un error
