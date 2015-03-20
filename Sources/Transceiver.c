@@ -19,6 +19,9 @@ extern dato Buffer_GPS[cantidad_datos][tam_dato];
 extern byte dir_escritura[4];
 
 error Init_Trans(void){
+    byte i, CadenaInit[19]="WR_455000_3_9_3_0"; //configuracion del transceiver f=455MHz, Data Rate 9600bps, output power 100mw
+    CadenaInit[17]=0x0D;					 //UART data rate 9600bps, no checkout
+    CadenaInit[18]=0x0A;
     SCI2BDH = 0x00;
     SCI2BDL = 0x70;
     // SCIC1: LOOPS=0,SCISWAI=0,RSRC=0,M=0,WAKE=0,ILT=0,PE=0,PT=0
@@ -31,6 +34,13 @@ error Init_Trans(void){
     PTADD_PTADD0 = 1;
     // PIN enable comosalida
     PTADD_PTADD1 = 1;
+    
+    (void) Transceiver_Prender();
+    (void) Transceiver_SetAlto();
+    
+    for(i=0; i<19; i++){
+    	Transceiver_EnviarByte(CadenaInit[i]);
+    }
     return _ERR_OK;
 }
 

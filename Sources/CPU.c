@@ -54,7 +54,7 @@ error Init_CPU(void){
 	    //RTIF=1, RTCLKS=11, RTIE=1, RTCPS=0110
 	    //RTCSC =0xF6;
 	    //RTCMOD=0x01;
-	    id=0x34;
+	    id=0x10;
 	    ban_vueltacomp = APAGADO;     //=0apagada =1corriendo =2finalizado
 	    ban_turno=APAGADO;          //=0apagada =1corriendo =2finalizado
 	    ban_bufferTx=1;             //1=no tiene datos

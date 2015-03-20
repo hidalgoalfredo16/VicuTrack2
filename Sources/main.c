@@ -37,7 +37,7 @@ extern byte ban_vueltacomp;
 
 void main(void) {
 	error temp;                   
-	byte nrosec=1,ban_datogps=0;
+	byte nrosec=1,ban_datogps=0, datodaga=0x61;
   byte i,intentos_gps=0,intentos_turno=0,intentos_ack=0,indice=0, ban_datodif=0;
   int sync=0, cont_muerte=0;
   error resp2, resp3;
@@ -50,11 +50,17 @@ void main(void) {
   temp=(error) SD_Init();
   LED_BrillarV(2,UNSEG);
   LED_BrillarR(2,UNSEG);
-  (void)SD_LeerDireccion();
+ // (void)SD_LeerDireccion();
   ult_lat=0;
   ult_lon=0;
   vueltasRTC=VUELTAS;
   
+  Transceiver_Prender();
+  for(;;){
+	  (void) Transceiver_EnviarByte(datodaga);
+	  Cpu_Delay100US(100);
+	  __RESET_WATCHDOG();
+  }
   EnableInterrupts;
   /* include your code here */
   
@@ -64,7 +70,7 @@ void main(void) {
 
 		 if(ban_horasm == SI){
 			EnableInterrupts;
-			//(void)Transceiver_RecibirSM();		//Descomentar en un futuro no muy lejano	  
+			(void)Transceiver_RecibirSM();	  
 			ban_horasm=NO;
 			vueltasRTC=MINUTO; //Duerme 1 hora
 		 }
@@ -96,7 +102,7 @@ void main(void) {
 		do{
 			 (void)GPS_Recibir(tc);// recibo datos en crudo del GPS durante 5 intentos
 				  
-		}while(GPS_Analizar(tr,tc) != _ERR_OK && intentos_gps++<5);// analizamos si son datos validos 5 veces
+		}while(GPS_Analizar(tr,tc) == _ERR_OK && intentos_gps++<5);// analizamos si son datos validos 5 veces
 		//(void)GPS_Apagar();
 		 if(intentos_gps<5){
 			resp2 = GPS_Dato(dat,tr);// limpiamos la trama y dejamos solo los datos importantes
@@ -195,7 +201,7 @@ void main(void) {
 
  /////////// ENTRO EN RUTINA DE MUERTE DESP DE 2 SEMANAS EN EL MISMO LUGAR ///////////    
 	 
-		if(cont_muerte == MUERTO)
+		if(cont_muerte != MUERTO)  //Va igual!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! es solo para probar el envio de datos.
 			RUTINA_MUERTE();
 	 
  ////////// TERCERA PARTE: DORMIR DURANTE 15 MINUTOS //////////
