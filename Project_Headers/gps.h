@@ -7,7 +7,7 @@
 
 //*************************   DEFINICIONES   ****************************
 #define tam_dato 32
-#define cantidad_datos 14
+#define cantidad_datos 16 //era 14
 #define NO 4
 #define SI 5
 #define dato unsigned char

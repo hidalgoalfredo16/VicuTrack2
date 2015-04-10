@@ -17,13 +17,13 @@ extern byte ban_turno;
 extern byte ban_muerte;
 extern dato Buffer_GPS[cantidad_datos][tam_dato];
 extern byte dir_escritura[4];
+extern byte dir_lectura[4];
 
 error Init_Trans(void){
-    byte i, CadenaInit[19]="WR_455000_3_9_3_0"; //configuracion del transceiver f=455MHz, Data Rate 9600bps, output power 100mw
-    CadenaInit[17]=0x0D;					 //UART data rate 9600bps, no checkout
-    CadenaInit[18]=0x0A;
+    byte i, CadenaInit[19]="WR 455000 3 9 3 0\r\n"; //configuracion del transceiver f=455MHz, Data Rate 9600bps, output power 100mw
+    //byte CadenaInit[4]="RD\r\n";					 //UART data rate 9600bps, no checkout
     SCI2BDH = 0x00;
-    SCI2BDL = 0x70;
+    SCI2BDL = 0x6D;							//El baudrate era 0x70
     // SCIC1: LOOPS=0,SCISWAI=0,RSRC=0,M=0,WAKE=0,ILT=0,PE=0,PT=0
     SCI2C1 = 0x00;                // Configure the SCI
     // SCIC3: R8=0,T8=0,TXDIR=0,TXINV=0,ORIE=1,NEIE=0,FEIE=0,PEIE=0
@@ -36,11 +36,18 @@ error Init_Trans(void){
     PTADD_PTADD1 = 1;
     
     (void) Transceiver_Prender();
-    (void) Transceiver_SetAlto();
+    (void) Transceiver_SetBajo();
     
     for(i=0; i<19; i++){
-    	Transceiver_EnviarByte(CadenaInit[i]);
+    	(void) Transceiver_EnviarByte(CadenaInit[i]);
     }
+    
+    while(SCI2S1_RDRF == 0x00)
+    {
+    	asm{NOP
+    	}
+    }
+    
     return _ERR_OK;
 }
 
@@ -110,12 +117,12 @@ error Transceiver_Enviar(dato buf[][tam_dato], byte *j,byte *nrosec){
                     if(*j==cantidad_datos){
                     	ban_bufferTx=1; //buffer de transmision vacio
                     	LED_PrenderR();
-		                LED_PrenderV();
+		                //LED_PrenderV();
 		                Cpu_Delay100US(200);
 		                LED_ApagarR();
-		                LED_ApagarV();
+		                //LED_ApagarV();
 						if(SD_Condatos()==_ERR_OK){
-							(void)SD_Leer(buf);
+							(void)SD_Leer(dir_lectura, buf);
 							*j=0;
 							ban_bufferTx=0; //buffer de transmision con datos
 						}

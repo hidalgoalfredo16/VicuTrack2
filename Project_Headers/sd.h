@@ -57,6 +57,9 @@
 #define WriteSPIByte(x) (void)SPI_SendByte(x)
 #define HighSpeedSPI()  SPI_HighRate()
 
+#define DIRECCION_BIN 2600 // Direccion del archivo donde se guardan los punteros de lectura y escritura, 8GB=2600 4GB=680
+
+
 		
 //! Función para envio de un comando a la tarjeta SD
 /*! Esta función recibe solo la respuesta  del comando que puede ser
@@ -150,7 +153,7 @@ error SD_EnviarRecibirByte(byte,byte*);
     @li @c 1 No se produjo un error
     @li @c 5 Se produjo un error de timer
 */
-error SD_Leer(dato lectura[][tam_dato]);
+error SD_Leer(byte *direccion,dato lectura[][tam_dato]);
 
 //! Escribe datos en la tarjeta
 /*!

@@ -50,14 +50,15 @@ void main(void) {
   temp=(error) SD_Init();
   LED_BrillarV(2,UNSEG);
   LED_BrillarR(2,UNSEG);
- // (void)SD_LeerDireccion();
   ult_lat=0;
   ult_lon=0;
   vueltasRTC=VUELTAS;
   
-  Transceiver_Prender();
+  (void)Transceiver_Prender();
+  EnableInterrupts;
   for(;;){
-	  (void) Transceiver_EnviarByte(datodaga);
+	  (void) SD_Leer(dir_lectura, Buffer_Envio);
+	  (void) Transceiver_Enviar(Buffer_Envio, &sync, &nrosec);
 	  Cpu_Delay100US(100);
 	  __RESET_WATCHDOG();
   }
@@ -177,7 +178,7 @@ void main(void) {
 								// primero cargo el buffer_envio con datos para ser transmitidos y luego transmito
 								if(ban_bufferTx==1 && SD_Condatos()== _ERR_OK){// si bufferTx vacio y hay datos en 
 									indice=0;
-									resp2=SD_Leer(Buffer_Envio); // la SD lo cargo
+									resp2=SD_Leer(dir_lectura, Buffer_Envio); // la SD lo cargo
 								}
 								(void)Transceiver_Enviar(Buffer_Envio,&indice,&nrosec);
 								sync=300;
