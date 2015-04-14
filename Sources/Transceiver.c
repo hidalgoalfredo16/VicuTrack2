@@ -42,13 +42,23 @@ error Init_Trans(void){
     	(void) Transceiver_EnviarByte(CadenaInit[i]);
     }
     
-    while(SCI2S1_RDRF == 0x00)
-    {
-    	asm{NOP
-    	}
+    i=0;
+    while(i<19){
+		if(SCI2S1_RDRF != 0x00){           //si hay algo en el buffer de recepcion lo guardo
+			(void)SCI2S1;
+			CadenaInit[i]=SCI2D;
+			i++;
+		}
     }
     
-    return _ERR_OK;
+    if(CadenaInit[0]=='P' && CadenaInit[1]=='A' && CadenaInit[2]=='R' && CadenaInit[3]=='A' 
+    && CadenaInit[5]=='4' && CadenaInit[6]=='5' && CadenaInit[7]=='5' && CadenaInit[8]=='0' && CadenaInit[9]=='0' && CadenaInit[10]=='0' 
+    && CadenaInit[12]=='3' && CadenaInit[14]=='9' && CadenaInit[16]=='3' && CadenaInit[18]=='0')
+    {
+    	return _ERR_OK;
+    }
+    else
+    	return _ERR_DISTINTO;
 }
 
 error Transceiver_SetAlto(){

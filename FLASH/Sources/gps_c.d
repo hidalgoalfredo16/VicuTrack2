@@ -1,5 +1,4 @@
 
-
 Sources/gps_c.obj: \
 	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/../Sources/gps.c \
 	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/gps.h \

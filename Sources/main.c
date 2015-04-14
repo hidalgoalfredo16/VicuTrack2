@@ -54,14 +54,14 @@ void main(void) {
   ult_lon=0;
   vueltasRTC=VUELTAS;
   
-  (void)Transceiver_Prender();
+  /*(void)Transceiver_Prender();
   EnableInterrupts;
   for(;;){
 	  (void) SD_Leer(dir_lectura, Buffer_Envio);
 	  (void) Transceiver_Enviar(Buffer_Envio, &sync, &nrosec);
 	  Cpu_Delay100US(100);
 	  __RESET_WATCHDOG();
-  }
+  }*/
   EnableInterrupts;
   /* include your code here */
   
@@ -103,7 +103,7 @@ void main(void) {
 		do{
 			 (void)GPS_Recibir(tc);// recibo datos en crudo del GPS durante 5 intentos
 				  
-		}while(GPS_Analizar(tr,tc) == _ERR_OK && intentos_gps++<5);// analizamos si son datos validos 5 veces
+		}while(GPS_Analizar(tr,tc) != _ERR_OK && intentos_gps++<5);// analizamos si son datos validos 5 veces
 		//(void)GPS_Apagar();
 		 if(intentos_gps<5){
 			resp2 = GPS_Dato(dat,tr);// limpiamos la trama y dejamos solo los datos importantes
@@ -127,7 +127,7 @@ void main(void) {
 						  (void)GPS_EscribirBuffer(ult_dat,Buffer_GPS);// escribimos el dato q no se pudo guardar anteriormente
 					 }
 				}
-				if( GPS_EscribirBuffer(dat,Buffer_GPS)!=_ERR_OVF){ //va ==
+				if( GPS_EscribirBuffer(dat,Buffer_GPS)==_ERR_OVF){ //va ==
 					 //temp=(error) SD_Init();
 					 //temp=SD_Prender();
 					 resp3=SD_Escribir(dir_escritura,Buffer_GPS);
@@ -152,7 +152,7 @@ void main(void) {
 		
 		if(ban_datogps==1){
 			ban_datogps=0;
-			if((GPS_CompararBase(dat)==_ERR_OK) && (ban_bufferTx==0 || ban_SDvacia==0)){ // si esta cerca de la base y tiene algo para transmitir 
+			if(/*(GPS_CompararBase(dat)==_ERR_OK) && */(ban_bufferTx==0 || ban_SDvacia==0)){ // si esta cerca de la base y tiene algo para transmitir 
 				EnableInterrupts;
 				vueltasRTC=VUELTAS;//tiene mas prioridad la Tx a la base q la SM
 				ban_horasm=NO;//
@@ -202,7 +202,7 @@ void main(void) {
 
  /////////// ENTRO EN RUTINA DE MUERTE DESP DE 2 SEMANAS EN EL MISMO LUGAR ///////////    
 	 
-		if(cont_muerte != MUERTO)  //Va igual!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! es solo para probar el envio de datos.
+		if(cont_muerte == MUERTO)  //Va igual!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! es solo para probar el envio de datos.
 			RUTINA_MUERTE();
 	 
  ////////// TERCERA PARTE: DORMIR DURANTE 15 MINUTOS //////////

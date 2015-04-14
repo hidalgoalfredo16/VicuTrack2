@@ -1,5 +1,4 @@
 
-
 Sources/Transceiver_c.obj: \
 	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/../Sources/Transceiver.c \
 	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/Transceiver.h \
