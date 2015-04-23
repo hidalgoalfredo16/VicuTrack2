@@ -14,6 +14,7 @@ C_SRCS_QUOTED += \
 "../Sources/muerte.c" \
 "../Sources/sd.c" \
 "../Sources/spi.c" \
+"../Sources/storage.c" \
 
 C_SRCS += \
 ../Sources/CPU.c \
@@ -24,6 +25,7 @@ C_SRCS += \
 ../Sources/muerte.c \
 ../Sources/sd.c \
 ../Sources/spi.c \
+../Sources/storage.c \
 
 OBJS += \
 ./Sources/CPU_c.obj \
@@ -34,6 +36,7 @@ OBJS += \
 ./Sources/muerte_c.obj \
 ./Sources/sd_c.obj \
 ./Sources/spi_c.obj \
+./Sources/storage_c.obj \
 
 OBJS_QUOTED += \
 "./Sources/CPU_c.obj" \
@@ -44,6 +47,7 @@ OBJS_QUOTED += \
 "./Sources/muerte_c.obj" \
 "./Sources/sd_c.obj" \
 "./Sources/spi_c.obj" \
+"./Sources/storage_c.obj" \
 
 C_DEPS += \
 ./Sources/CPU_c.d \
@@ -54,6 +58,7 @@ C_DEPS += \
 ./Sources/muerte_c.d \
 ./Sources/sd_c.d \
 ./Sources/spi_c.d \
+./Sources/storage_c.d \
 
 C_DEPS_QUOTED += \
 "./Sources/CPU_c.d" \
@@ -64,6 +69,7 @@ C_DEPS_QUOTED += \
 "./Sources/muerte_c.d" \
 "./Sources/sd_c.d" \
 "./Sources/spi_c.d" \
+"./Sources/storage_c.d" \
 
 OBJS_OS_FORMAT += \
 ./Sources/CPU_c.obj \
@@ -74,6 +80,7 @@ OBJS_OS_FORMAT += \
 ./Sources/muerte_c.obj \
 ./Sources/sd_c.obj \
 ./Sources/spi_c.obj \
+./Sources/storage_c.obj \
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -143,6 +150,14 @@ Sources/spi_c.obj: ../Sources/spi.c
 	@echo 'Executing target #8 $<'
 	@echo 'Invoking: HCS08 Compiler'
 	"$(HC08ToolsEnv)/chc08" -ArgFile"Sources/spi.args" -ObjN="Sources/spi_c.obj" "$<" -Lm="$(@:%.obj=%.d)" -LmCfg=xilmou
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/storage_c.obj: ../Sources/storage.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #9 $<'
+	@echo 'Invoking: HCS08 Compiler'
+	"$(HC08ToolsEnv)/chc08" -ArgFile"Sources/storage.args" -ObjN="Sources/storage_c.obj" "$<" -Lm="$(@:%.obj=%.d)" -LmCfg=xilmou
 	@echo 'Finished building: $<'
 	@echo ' '
 

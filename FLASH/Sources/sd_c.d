@@ -9,5 +9,6 @@ Sources/sd_c.obj: \
 	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/gps.h \
 	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/sd_command.h \
 	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/spi.h \
-	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/CPU.h 
+	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/CPU.h \
+	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/storage.h 
 

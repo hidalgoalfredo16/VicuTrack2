@@ -6,6 +6,7 @@
  */
 
 #include "sd.h"
+#include "storage.h"
 
 extern byte dir_lectura[4];
 extern byte ban_bufferTx;
@@ -13,6 +14,7 @@ extern byte ban_SDvacia;
 extern byte dir_escritura[4];
 extern byte dir_lectura[4];
 extern dato Buffer_Envio[cantidad_datos][tam_dato];
+extern UINT16 u16FAT_Data_BASE;
 
 struct {
   UINT8 NUM_BLOCKS;
@@ -263,6 +265,7 @@ UINT8 SD_Init(void) {
   if(u8R1 & SD_R1_ERROR_MASK) return (SD_FAIL_INIT);
   
   //SPI_HighRate();	//Cambio el baudrate
+  FAT_Read_Master_Block((UINT8 *)Buffer_Envio);
   (void)SD_LeerDireccion();
   return (SD_OK);
 }
@@ -655,12 +658,12 @@ return _ERR_OK;
 
 extern UINT32 direccion;
 error SD_LeerDireccion(){
-	UINT32 u32SD_Block;
+	//UINT32 u32SD_Block;
     int h=0, i=0;
     (void)SD_Assert();
     
-    u32SD_Block=DIRECCION_BIN; //Cargar la direccion del sector fisico donde se encuentran las direcciones de lectura y escritura 
-    (void)SD_ReadSector(u32SD_Block, (UINT8 *) Buffer_Envio); //Lee el sector que contiene las direcciones de lectura y escritura
+    //u32SD_Block=DIRECCION_BIN; //Cargar la direccion del sector fisico donde se encuentran las direcciones de lectura y escritura 
+    (void)SD_ReadSector((UINT32) u16FAT_Data_BASE, (UINT8 *) Buffer_Envio); //Lee el sector que contiene las direcciones de lectura y escritura
     
     for(i=0;i<4;i++)
     	dir_lectura[i] = Buffer_Envio[0][i]; 
