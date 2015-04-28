@@ -1,5 +1,4 @@
 
-
 Sources/spi_c.obj: \
 	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/../Sources/spi.c \
 	D:/Facultad/5\ Año/Proyecto\ Final/CodeWarrior/VicuTrack2/Project_Headers/spi.h \

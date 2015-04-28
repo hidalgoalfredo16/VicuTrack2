@@ -33,7 +33,7 @@ _startupData is allocated at 0x8088 and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
   _Range   pZeroOut       0x100     1439
-  _Copy    *toCopyDownBeg 0xA378
+  _Copy    *toCopyDownBeg 0xA372
 } _startupData;
 
 *********************************************************************************************
@@ -43,8 +43,8 @@ Section Name                    Size  Type     From       To       Segment
 .data                              1   R/W      0x100      0x100   RAM
 .init                            136     R     0x8000     0x8087   ROM
 .startData                        14     R     0x8088     0x8095   ROM
-.text                           8930     R     0x8096     0xA377   ROM
-.copy                              7     R     0xA378     0xA37E   ROM
+.text                           8924     R     0x8096     0xA371   ROM
+.copy                              7     R     0xA372     0xA378   ROM
 .abs_section_ffce                  2     R     0xFFCE     0xFFCF   .absSeg0
 .abs_section_ffd2                  2     R     0xFFD2     0xFFD3   .absSeg1
 .abs_section_ffd4                  2     R     0xFFD4     0xFFD5   .absSeg2
@@ -187,7 +187,7 @@ Section Name                    Size  Type     From       To       Segment
 .vectSeg136_vect                   2     R     0xFFFE     0xFFFF   .vectSeg136
 
 Summary of section sizes per section type:
-READ_ONLY (R):        2387 (dec:     9095)
+READ_ONLY (R):        2381 (dec:     9089)
 READ_WRITE (R/W):      5A0 (dec:     1440)
 NO_INIT (N/I):          A0 (dec:      160)
 
@@ -222,7 +222,7 @@ MODULE:                 -- CPU_c.obj --
      dir_base_lon                               115       4       4       2   .common     
      id                                         119       1       1       6   .common     
      ban_turno                                  11A       1       1       8   .common     
-     ban_bufferTx                               11B       1       1       7   .common     
+     ban_bufferTx                               11B       1       1       5   .common     
      ban_SDvacia                                11C       1       1       4   .common     
      ban_ACK                                    11D       1       1       9   .common     
      index_Rx                                   11E       1       1       7   .common     
@@ -299,23 +299,23 @@ MODULE:                 -- sd_c.obj --
      SD_Init                                   9624     2D7     727       3   .text       
      SD_ReadSector                             98FB      77     119       4   .text       
      SD_WriteSector                            9972      9A     154       2   .text       
-     SD_Leer                                   9A0C      E0     224       2   .text       
-     SD_Escribir                               9AEC      D6     214       3   .text       
-     SD_CalculaDireccion                       9BC2     157     343       4   .text       
-     SD_Condatos                               9D19      47      71       2   .text       
-     SD_LeerDireccion                          9D60      6E     110       1   .text       
+     SD_Leer                                   9A0C      DD     221       2   .text       
+     SD_Escribir                               9AE9      D6     214       3   .text       
+     SD_CalculaDireccion                       9BBF     157     343       4   .text       
+     SD_Condatos                               9D16      47      71       2   .text       
+     SD_LeerDireccion                          9D5D      6B     107       1   .text       
 - VARIABLES:
      gSDCard                                    692       3       3       9   .common     
 MODULE:                 -- spi_c.obj --
 - PROCEDURES:
-     SPI_Init                                  9DCE       D      13       3   .text       
-     SPI_SendByte                              9DDB       E      14       9   .text       
-     SPI_ReceiveByte                           9DE9       C      12       9   .text       
+     SPI_Init                                  9DC8       D      13       3   .text       
+     SPI_SendByte                              9DD5       E      14       9   .text       
+     SPI_ReceiveByte                           9DE3       C      12       9   .text       
 - VARIABLES:
 MODULE:                 -- storage_c.obj --
 - PROCEDURES:
-     LWordSwap                                 9DF5      9F     159       1   .text       
-     FAT_Read_Master_Block                     9E94     1E3     483       8   .text       
+     LWordSwap                                 9DEF      9F     159       1   .text       
+     FAT_Read_Master_Block                     9E8E     1E3     483       8   .text       
 - VARIABLES:
      u16Main_Offset                             10B       2       2       4   .bss        
      pMasterBoot.1                              10D       2       2      14   .bss        
@@ -472,37 +472,37 @@ MODULE:                 -- mc9s08qe32_c.obj --
      _SCI2BD                                   1870       2       2       2   .abs_section_1870
 MODULE:                 -- rtshc08.o (ansiis.lib) --
 - PROCEDURES:
-     _PUSH_ARGS_L                              A077      20      32       2   .text       
-     _ENTER_UNARY_L                            A097      29      41       5   .text       
-     _ENTER_BINARY_L                           A0C0      16      22       5   .text       
-     _ENTER_BINARY_L_RC                        A0D6      19      25       4   .text       
-     _LADD_k_is_k_plus_j                       A0EF      1F      31       1   .text       
-     _k_is_k_plus_j_l                          A10E      1E      30       2   .text       
-     _k_is_k_plus_j_i                          A12C      12      18       3   .text       
-     _LSUB_k_is_k_minus_j                      A13E      1F      31       2   .text       
-     _LAND_k_is_k_and_j                        A15D      1F      31       1   .text       
-     _LOR_k_is_k_or_j                          A17C      1F      31       1   .text       
-     _LMUL_k_is_k_mul_j                        A19B      81     129       2   .text       
-     _LCMP_k_rel_j                             A21C      1F      31       2   .text       
-     _IMUL_STAR08                              A23B      27      39       9   .text       
-     _ILSL                                     A262       C      12       5   .text       
-     _ICMP                                     A26E      16      22       9   .text       
-     _LINC                                     A284      16      22       4   .text       
-     _LNEG                                     A29A      1C      28       2   .text       
-     _LADD                                     A2B6       6       6       6   .text       
-     _LSUB                                     A2BC       6       6       2   .text       
-     _LSUB_RC                                  A2C2       6       6       2   .text       
-     _LAND_RC                                  A2C8       6       6      11   .text       
-     _LOR                                      A2CE       6       6       9   .text       
-     _LMUL                                     A2D4       6       6       2   .text       
-     _LMUL_RC                                  A2DA       6       6       2   .text       
-     _LASR                                     A2E0      16      22       3   .text       
-     _LLSR                                     A2F6      16      22       4   .text       
-     _LLSL                                     A30C      16      22      13   .text       
-     _LCMP                                     A322       6       6       1   .text       
-     _LCMP_RC                                  A328       6       6       6   .text       
-     _COPY                                     A32E      30      48       3   .text       
-     _POP32                                    A35E      1A      26      36   .text       
+     _PUSH_ARGS_L                              A071      20      32       2   .text       
+     _ENTER_UNARY_L                            A091      29      41       5   .text       
+     _ENTER_BINARY_L                           A0BA      16      22       5   .text       
+     _ENTER_BINARY_L_RC                        A0D0      19      25       4   .text       
+     _LADD_k_is_k_plus_j                       A0E9      1F      31       1   .text       
+     _k_is_k_plus_j_l                          A108      1E      30       2   .text       
+     _k_is_k_plus_j_i                          A126      12      18       3   .text       
+     _LSUB_k_is_k_minus_j                      A138      1F      31       2   .text       
+     _LAND_k_is_k_and_j                        A157      1F      31       1   .text       
+     _LOR_k_is_k_or_j                          A176      1F      31       1   .text       
+     _LMUL_k_is_k_mul_j                        A195      81     129       2   .text       
+     _LCMP_k_rel_j                             A216      1F      31       2   .text       
+     _IMUL_STAR08                              A235      27      39       9   .text       
+     _ILSL                                     A25C       C      12       5   .text       
+     _ICMP                                     A268      16      22       9   .text       
+     _LINC                                     A27E      16      22       4   .text       
+     _LNEG                                     A294      1C      28       2   .text       
+     _LADD                                     A2B0       6       6       6   .text       
+     _LSUB                                     A2B6       6       6       2   .text       
+     _LSUB_RC                                  A2BC       6       6       2   .text       
+     _LAND_RC                                  A2C2       6       6      11   .text       
+     _LOR                                      A2C8       6       6       9   .text       
+     _LMUL                                     A2CE       6       6       2   .text       
+     _LMUL_RC                                  A2D4       6       6       2   .text       
+     _LASR                                     A2DA      16      22       3   .text       
+     _LLSR                                     A2F0      16      22       4   .text       
+     _LLSL                                     A306      16      22      13   .text       
+     _LCMP                                     A31C       6       6       1   .text       
+     _LCMP_RC                                  A322       6       6       6   .text       
+     _COPY                                     A328      30      48       3   .text       
+     _POP32                                    A358      1A      26      36   .text       
 - VARIABLES:
 
 *********************************************************************************************
@@ -515,7 +515,7 @@ MODULE STATISTIC
   led_c.obj                                    0    113      0
   main_c.obj                                1388    819      0
   muerte_c.obj                                 2    738      0
-  sd_c.obj                                     3   2346      0
+  sd_c.obj                                     3   2340      0
   spi_c.obj                                    0     39      0
   storage_c.obj                               16    642      0
   start08_c.obj                                0    136      0
@@ -928,7 +928,7 @@ OBJECT LIST SORTED BY ADDRESS
      dir_base_lon                               115       4       4       2   .common     
      id                                         119       1       1       6   .common     
      ban_turno                                  11A       1       1       8   .common     
-     ban_bufferTx                               11B       1       1       7   .common     
+     ban_bufferTx                               11B       1       1       5   .common     
      ban_SDvacia                                11C       1       1       4   .common     
      ban_ACK                                    11D       1       1       9   .common     
      index_Rx                                   11E       1       1       7   .common     
@@ -1054,47 +1054,47 @@ OBJECT LIST SORTED BY ADDRESS
      SD_Init                                   9624     2D7     727       3   .text       
      SD_ReadSector                             98FB      77     119       4   .text       
      SD_WriteSector                            9972      9A     154       2   .text       
-     SD_Leer                                   9A0C      E0     224       2   .text       
-     SD_Escribir                               9AEC      D6     214       3   .text       
-     SD_CalculaDireccion                       9BC2     157     343       4   .text       
-     SD_Condatos                               9D19      47      71       2   .text       
-     SD_LeerDireccion                          9D60      6E     110       1   .text       
-     SPI_Init                                  9DCE       D      13       3   .text       
-     SPI_SendByte                              9DDB       E      14       9   .text       
-     SPI_ReceiveByte                           9DE9       C      12       9   .text       
-     LWordSwap                                 9DF5      9F     159       1   .text       
-     FAT_Read_Master_Block                     9E94     1E3     483       8   .text       
-     _PUSH_ARGS_L                              A077      20      32       2   .text       
-     _ENTER_UNARY_L                            A097      29      41       5   .text       
-     _ENTER_BINARY_L                           A0C0      16      22       5   .text       
-     _ENTER_BINARY_L_RC                        A0D6      19      25       4   .text       
-     _LADD_k_is_k_plus_j                       A0EF      1F      31       1   .text       
-     _k_is_k_plus_j_l                          A10E      1E      30       2   .text       
-     _k_is_k_plus_j_i                          A12C      12      18       3   .text       
-     _LSUB_k_is_k_minus_j                      A13E      1F      31       2   .text       
-     _LAND_k_is_k_and_j                        A15D      1F      31       1   .text       
-     _LOR_k_is_k_or_j                          A17C      1F      31       1   .text       
-     _LMUL_k_is_k_mul_j                        A19B      81     129       2   .text       
-     _LCMP_k_rel_j                             A21C      1F      31       2   .text       
-     _IMUL_STAR08                              A23B      27      39       9   .text       
-     _ILSL                                     A262       C      12       5   .text       
-     _ICMP                                     A26E      16      22       9   .text       
-     _LINC                                     A284      16      22       4   .text       
-     _LNEG                                     A29A      1C      28       2   .text       
-     _LADD                                     A2B6       6       6       6   .text       
-     _LSUB                                     A2BC       6       6       2   .text       
-     _LSUB_RC                                  A2C2       6       6       2   .text       
-     _LAND_RC                                  A2C8       6       6      11   .text       
-     _LOR                                      A2CE       6       6       9   .text       
-     _LMUL                                     A2D4       6       6       2   .text       
-     _LMUL_RC                                  A2DA       6       6       2   .text       
-     _LASR                                     A2E0      16      22       3   .text       
-     _LLSR                                     A2F6      16      22       4   .text       
-     _LLSL                                     A30C      16      22      13   .text       
-     _LCMP                                     A322       6       6       1   .text       
-     _LCMP_RC                                  A328       6       6       6   .text       
-     _COPY                                     A32E      30      48       3   .text       
-     _POP32                                    A35E      1A      26      36   .text       
+     SD_Leer                                   9A0C      DD     221       2   .text       
+     SD_Escribir                               9AE9      D6     214       3   .text       
+     SD_CalculaDireccion                       9BBF     157     343       4   .text       
+     SD_Condatos                               9D16      47      71       2   .text       
+     SD_LeerDireccion                          9D5D      6B     107       1   .text       
+     SPI_Init                                  9DC8       D      13       3   .text       
+     SPI_SendByte                              9DD5       E      14       9   .text       
+     SPI_ReceiveByte                           9DE3       C      12       9   .text       
+     LWordSwap                                 9DEF      9F     159       1   .text       
+     FAT_Read_Master_Block                     9E8E     1E3     483       8   .text       
+     _PUSH_ARGS_L                              A071      20      32       2   .text       
+     _ENTER_UNARY_L                            A091      29      41       5   .text       
+     _ENTER_BINARY_L                           A0BA      16      22       5   .text       
+     _ENTER_BINARY_L_RC                        A0D0      19      25       4   .text       
+     _LADD_k_is_k_plus_j                       A0E9      1F      31       1   .text       
+     _k_is_k_plus_j_l                          A108      1E      30       2   .text       
+     _k_is_k_plus_j_i                          A126      12      18       3   .text       
+     _LSUB_k_is_k_minus_j                      A138      1F      31       2   .text       
+     _LAND_k_is_k_and_j                        A157      1F      31       1   .text       
+     _LOR_k_is_k_or_j                          A176      1F      31       1   .text       
+     _LMUL_k_is_k_mul_j                        A195      81     129       2   .text       
+     _LCMP_k_rel_j                             A216      1F      31       2   .text       
+     _IMUL_STAR08                              A235      27      39       9   .text       
+     _ILSL                                     A25C       C      12       5   .text       
+     _ICMP                                     A268      16      22       9   .text       
+     _LINC                                     A27E      16      22       4   .text       
+     _LNEG                                     A294      1C      28       2   .text       
+     _LADD                                     A2B0       6       6       6   .text       
+     _LSUB                                     A2B6       6       6       2   .text       
+     _LSUB_RC                                  A2BC       6       6       2   .text       
+     _LAND_RC                                  A2C2       6       6      11   .text       
+     _LOR                                      A2C8       6       6       9   .text       
+     _LMUL                                     A2CE       6       6       2   .text       
+     _LMUL_RC                                  A2D4       6       6       2   .text       
+     _LASR                                     A2DA      16      22       3   .text       
+     _LLSR                                     A2F0      16      22       4   .text       
+     _LLSL                                     A306      16      22      13   .text       
+     _LCMP                                     A31C       6       6       1   .text       
+     _LCMP_RC                                  A322       6       6       6   .text       
+     _COPY                                     A328      30      48       3   .text       
+     _POP32                                    A358      1A      26      36   .text       
      _Vector_24                                FFCE       2       2       0   .abs_section_ffce
      _Vector_22                                FFD2       2       2       0   .abs_section_ffd2
      _Vector_21                                FFD4       2       2       0   .abs_section_ffd4
@@ -1141,13 +1141,13 @@ rtshc08.o (ansiis.lib):
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xA378 ---- SIZE       4 ---
+------- ROM-ADDRESS: 0xA372 ---- SIZE       4 ---
 Filling bytes inserted
  00010100
-------- ROM-ADDRESS: 0xA37C ---- RAM-ADDRESS: 0x100 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xA376 ---- RAM-ADDRESS: 0x100 ---- SIZE       1 ---
 Name of initialized Object : ban_horasm
  04
-------- ROM-ADDRESS: 0xA37D ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xA377 ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -1237,7 +1237,7 @@ SD_ReadSector             USES _SRS gSDCard _LLSL _POP32 _PTBD SD_SendCommand
 SD_WriteSector            USES _SRS _PTBD gSDCard _LLSL _POP32 SD_SendCommand 
                                 SPI_SendByte SPI_ReceiveByte 
 SD_Leer                   USES SPI_Init _LLSL _POP32 _LOR dir_lectura 
-                                SD_CalculaDireccion SD_ReadSector Cpu_Delay100US ban_bufferTx 
+                                SD_CalculaDireccion SD_ReadSector Cpu_Delay100US 
 SD_Escribir               USES SPI_Init _LLSL _POP32 _LOR SD_WriteSector 
                                 Cpu_Delay100US ban_SDvacia 
 SD_CalculaDireccion       USES _LLSL _POP32 _LOR _LINC _LASR _PTBD dir_lectura 
@@ -1245,7 +1245,6 @@ SD_CalculaDireccion       USES _LLSL _POP32 _LOR _LINC _LASR _PTBD dir_lectura
 SD_Condatos               USES dir_escritura dir_lectura _ICMP ban_SDvacia 
 SD_LeerDireccion          USES _PTBD u16FAT_Data_BASE Buffer_Envio 
                                 SD_ReadSector dir_lectura dir_escritura Cpu_Delay100US 
-                                ban_bufferTx 
 SPI_Init                  USES _PTBD _PTBDD _SPIBR _SPIC2 _SPIC1 
 SPI_SendByte              USES _SPIS _SPID 
 SPI_ReceiveByte           USES _SPID SPI_SendByte _SPIS 
@@ -1664,6 +1663,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 7
-Total size of all blocks to be downloaded: 9095
+Number of blocks to be downloaded: 6
+Total size of all blocks to be downloaded: 9089
 

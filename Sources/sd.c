@@ -508,7 +508,7 @@ error SD_Leer(byte *direccion, dato lectura[][tam_dato]){
     }while(test != 0xff);
     (void)SD_DesAssert();*/
     (void)Cpu_Delay100US(100); 
-    ban_bufferTx=0;
+    //ban_bufferTx=0;
         
     return _ERR_OK;
 
@@ -663,6 +663,7 @@ error SD_LeerDireccion(){
     (void)SD_Assert();
     
     //u32SD_Block=DIRECCION_BIN; //Cargar la direccion del sector fisico donde se encuentran las direcciones de lectura y escritura 
+    //(UINT32) u16FAT_Data_BASE
     (void)SD_ReadSector((UINT32) u16FAT_Data_BASE, (UINT8 *) Buffer_Envio); //Lee el sector que contiene las direcciones de lectura y escritura
     
     for(i=0;i<4;i++)
@@ -673,7 +674,7 @@ error SD_LeerDireccion(){
     
     (void)SD_DesAssert();
     (void)Cpu_Delay100US(100);
-    ban_bufferTx=0;
+    //ban_bufferTx=0;
     
     return _ERR_OK;
 }
