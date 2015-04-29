@@ -54,14 +54,6 @@ void main(void) {
   ult_lon=0;
   vueltasRTC=VUELTAS;
   
-  /*(void)Transceiver_Prender();
-  EnableInterrupts;
-  for(;;){
-	  (void) SD_Leer(dir_lectura, Buffer_Envio);
-	  (void) Transceiver_Enviar(Buffer_Envio, &sync, &nrosec);
-	  Cpu_Delay100US(100);
-	  __RESET_WATCHDOG();
-  }*/
   EnableInterrupts;
   /* include your code here */
   
