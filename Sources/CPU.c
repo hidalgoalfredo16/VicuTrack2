@@ -2,7 +2,6 @@
 #include "CPU.h"
 #include "led.h"
 
-//**********************Variables Globales*****************************
 long dir_base_lat;
 long dir_base_lon;
 //byte dir_escritura[4];
@@ -14,16 +13,20 @@ byte ban_SDvacia;
 byte ban_ACK;
 //byte ban_fix;
 byte index_Rx;
+//! Variable utilizada cuando el dispositivo duerme 
+/*!
+ Luego de una vuelta completa del programa, el dispositivo 'duerme'
+ @li @c 0 APAGADO Valor inicial
+ @li @c 1 CORRIENDO Toma este valor antes de empezar a dormir. Se espera a que el RTC interrumpa x veces para cambiar al siguiente estado
+ @li @c 2 FIN Luego de que el RTC interrumpe x veces toma este valor para que el programa sepa que debe dejar de dormir y seguir trabajando
+ */
 byte ban_vueltacomp;
 byte ban_muerte;
 byte ban_finao;
 byte ban_esperafix;
 
-//**********************Variables Externas******************************
 extern byte Buffer_Rx[tam_paquete];
 
-
-//****************************Funciones*****************************************
 error Init_CPU(void){
 		SOPT1 = 0x23;      // SOPT1: COPE=0,COPT=1,STOPE=1,??=0,??=0,??=0,BKGDPE=1,RSTPE=1                
 	    SOPT2 = 0x10;      // SOPT2: COPCLKS=0,??=0,??=0,SPIFE=1,SPIPS=0,ACIC2=0,IICPS=0,ACIC1=0                
@@ -112,14 +115,14 @@ void CPU_ApagarRTC(){
 byte CPU_DameTension(){
 	int c=0;
 	byte temp,i;
-	PTAD_PTAD7 = 1;  
+	TENSION_OUT = 1;  
 	for(i=0;i<3;i++){
 		ADCSC1=0x08;	// Trata de medir tension en PTA6 AD8
 		while((ADCSC1&0x80)==0 && c++<5000){ //Esperan que COCO=1
 		}
 		temp=ADCRL;
 	}
-	PTAD_PTAD7 = 0;
+	TENSION_OUT = 0;
 	return temp;
 }
 

@@ -179,6 +179,7 @@ void main(void) {
 								if(ban_bufferTx==1 && SD_Condatos()== _ERR_OK){// si bufferTx vacio y hay datos en 
 									indice=0;
 									resp2=SD_Leer(dir_lectura, Buffer_Envio); // la SD lo cargo
+									ban_bufferTx=0; //buffer de transmision con datos
 								}
 								(void)Transceiver_Enviar(Buffer_Envio,&indice,&nrosec);
 								sync=300;

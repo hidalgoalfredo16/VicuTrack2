@@ -57,7 +57,7 @@
 #define WriteSPIByte(x) (void)SPI_SendByte(x)
 #define HighSpeedSPI()  SPI_HighRate()
 
-#define DIRECCION_BIN 2600 // Direccion del archivo donde se guardan los punteros de lectura y escritura, 8GB=2600 4GB=680
+#define DIRECCION_BIN 2600 // Direccion del archivo donde se guardan los punteros de lectura y escritura, 8GB=2600 4GB=680 512MB=2576
 
 
 		
