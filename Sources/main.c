@@ -52,11 +52,8 @@ void main(void) {
   ult_lat=0;
   ult_lon=0;
   vueltasRTC=VUELTAS;
+
   
-  /*(void)Transceiver_Prender();
-  EnableInterrupts;
- 	 dag daga daga
-  }*/
   EnableInterrupts;
   /* include your code here */
   
