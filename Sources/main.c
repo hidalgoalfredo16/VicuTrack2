@@ -55,11 +55,7 @@ void main(void) {
   
   /*(void)Transceiver_Prender();
   EnableInterrupts;
-  for(;;){
-	  (void) SD_Leer(dir_lectura, Buffer_Envio);
-	  (void) Transceiver_Enviar(Buffer_Envio, &sync, &nrosec);
-	  Cpu_Delay100US(100);
-	  __RESET_WATCHDOG();
+ 	 dag daga daga
   }*/
   EnableInterrupts;
   /* include your code here */
