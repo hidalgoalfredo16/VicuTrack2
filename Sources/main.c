@@ -7,7 +7,6 @@
 #include "muerte.h"
 #include "CPU.h"
 
-//////// DECLARACION DE VARIABLES GLOBALES //////////
 
 dato Buffer_Envio[cantidad_datos][tam_dato]; // Vector para la transmision
 dato Buffer_GPS[cantidad_datos][tam_dato];
