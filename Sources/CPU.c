@@ -1,18 +1,46 @@
+/*!
+ @file cpu.c
+ @brief Define variables e implementa funciones necesarias para el manejo del cpu
+ */
+
 #include "error.h"
 #include "CPU.h"
 #include "led.h"
 
-long dir_base_lat;
-long dir_base_lon;
-//byte dir_escritura[4];
-//byte dir_lectura[4];
-byte id;
-byte ban_turno;     //=0apagada =1corriendo =2finalizado
+//! Variable utilizada cuando se esta esperando un turno para poder transmitir  
+/*!
+ @li @c 0 APAGADO Valor inicial
+ @li @c 1 CORRIENDO Toma este valor durante la espera del turno (El programa no realiza otra tarea). Se espera a que el RTC interrumpa para cambiar al siguiente estado
+ @li @c 2 FIN Luego de que el RTC interrumpe, toma este valor para que el programa continue su ejecucion
+ @li @c 3 HAYPAQUETE Toma este valor cuando el transceiver interrumpe, luego se controla si el paquete recibido es del tipo 'turno'
+ */
+byte ban_turno;
+
+//! Variable que indica si el buffer de transmision del transceiver esta vacio o tiene datos
+/*!
+ @li @c 0 El buffer tiene datos para enviar
+ @li @c 1 El buffer no tiene datos. Si quiere transmitir debe leer desde la sd un bloque nuevo 
+ */
 byte ban_bufferTx;
+
+//! Variable que indica si la tarjeta sd esta vacia o tiene datos
+/*!
+ @li @c 0 La tarjeta tiene datos para enviar, que deberán ser copiados al Buffer_Envio para ser enviados
+ @li @c 1 La tarjeta no tiene datos nuevos para enviar 
+ */
 byte ban_SDvacia;
+
+//! Variable utilizada cuando se esta esperando el ack de un dato transmitido  
+/*!
+ @li @c 0 APAGADO Toma este valor durante la espera del ack (El programa no realiza otra tarea). Se espera a que el RTC interrumpa para cambiar al siguiente estado
+ @li @c 2 FIN Luego de que el RTC interrumpe, toma este valor para que el programa continue su ejecucion
+ @li @c 3 HAYPAQUETE Toma este valor cuando el transceiver interrumpe, luego se controla si el paquete recibido es del tipo 'ack'
+ */
 byte ban_ACK;
-//byte ban_fix;
+
+//! Variable utilizada como indice del Buffer_Rx[tam_paquete] utilizado para almacenar los bytes recibidos por el transceiver
 byte index_Rx;
+
 //! Variable utilizada cuando el dispositivo duerme 
 /*!
  Luego de una vuelta completa del programa, el dispositivo 'duerme'
@@ -21,8 +49,29 @@ byte index_Rx;
  @li @c 2 FIN Luego de que el RTC interrumpe x veces toma este valor para que el programa sepa que debe dejar de dormir y seguir trabajando
  */
 byte ban_vueltacomp;
+
+//! Variable utilizada cuando se esta esperando recibir una señal de muerte  
+/*!
+ @li @c 0 APAGADO Valor inicial
+ @li @c 1 CORRIENDO Toma este valor durante la espera de la SM (El programa no realiza otra tarea). Se espera a que el RTC interrumpa para cambiar al siguiente estado
+ @li @c 2 FIN Luego de que el RTC interrumpe, toma este valor para que el programa continue su ejecucion
+ @li @c 3 HAYPAQUETE Toma este valor cuando el transceiver interrumpe, luego se controla el checksum del dato
+ */
 byte ban_muerte;
+
+//! Variable utilizada cuando el dispositivo duerme cuando esta muerto 
+/*!
+ @li @c 1 CORRIENDO Toma este valor antes de empezar a dormir. Se espera a que el RTC interrumpa x veces para cambiar al siguiente estado
+ @li @c 2 FIN Luego de que el RTC interrumpe x veces toma este valor para que el programa sepa que debe dejar de dormir y seguir trabajando
+ */
 byte ban_finao;
+
+//!Variable utilizada durante el proceso de fix del gps
+/*!
+ El dispositivo espera un determinado tiempo en estado de stand by mientras el gps realiza el fix
+ @li @c 0 Toma este valor a la espera de que el RTC interrumpa para cambiar al siguiente estado
+ @li @c 1 Luego de que el RTC interrumpe, toma este valor para que el programa continue su ejecucion
+ */
 byte ban_esperafix;
 
 extern byte Buffer_Rx[tam_paquete];
@@ -57,7 +106,7 @@ error Init_CPU(void){
 	    //RTIF=1, RTCLKS=11, RTIE=1, RTCPS=0110
 	    //RTCSC =0xF6;
 	    //RTCMOD=0x01;
-	    id=0x10;
+	    //id=0x10;
 	    ban_vueltacomp = APAGADO;     //=0apagada =1corriendo =2finalizado
 	    ban_turno=APAGADO;          //=0apagada =1corriendo =2finalizado
 	    ban_bufferTx=1;             //1=no tiene datos
@@ -65,8 +114,8 @@ error Init_CPU(void){
 	    ban_ACK=APAGADO;
 	    ban_muerte=APAGADO;
 	    ban_finao=APAGADO;
-	    dir_base_lat=26505903;//89600000;//26481282;//26481282 gabriel//26505903 facultad;
-	    dir_base_lon=65138195;//65122019;//65122019 gabriel//65138195 facultad;
+	    //dir_base_lat=26505903;//89600000;//26481282;//26481282 gabriel//26505903 facultad;
+	    //dir_base_lon=65138195;//65122019;//65122019 gabriel//65138195 facultad;
 	    index_Rx=0;
 	    return _ERR_OK;
 }

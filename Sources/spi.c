@@ -1,6 +1,10 @@
+/*!
+ @file spi.c
+ @brief Define variables e implementa funciones necesarias para el manejo del spi
+ */
+
 #include "spi.h"
 
-/************************************************/
 void SPI_Init(void) {
   
   //SOPT2 = SOPT2_SPI1PS_MASK;  // Drive PTE as SPI port
@@ -12,13 +16,13 @@ void SPI_Init(void) {
   SPIC2 = 0x00; // Registro de control 
   SPIC1 = SPIC1_SPE_MASK | SPIC1_MSTR_MASK; //pone en 1 spe para habilitar y el mstr para q sea master y no esclavo
 }
-/************************************************/
+
 void SPI_SendByte(UINT8 u8Data) {
 	while(!SPIS_SPTEF); // Registro de estado indica si el buffer esta vacio o no
     (void)SPIS; //Limpia el registro SPIS
 	SPID = u8Data; 
 }
-/************************************************/
+
 UINT8 SPI_ReceiveByte(void) {
   (void)SPID;
   /*
@@ -30,7 +34,7 @@ UINT8 SPI_ReceiveByte(void) {
   while (!SPIS_SPRF) ;	//Espera hasta que hay un dato disponible
   return(SPID);
 } 
-/************************************************/
+
 /*UINT8 SPI_Receive_byte(void) {
   byte Count;
   byte Result;
@@ -49,7 +53,6 @@ UINT8 SPI_ReceiveByte(void) {
 	
 }*/
 
-/************************************************/
 void SPI_HighRate(void) {
   SPIC1 = 0x00;
   SPIBR = 0x12; // 4 Mhz, lo mas proximo posible a 4.5 Mhz     		

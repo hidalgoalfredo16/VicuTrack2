@@ -1,3 +1,8 @@
+/*!
+ @file main.c
+ @brief 
+ */
+
 #include <hidef.h> /* for EnableInterrupts macro */
 #include "derivative.h" /* include peripheral declarations */
 #include "gps.h"
@@ -7,18 +12,24 @@
 #include "muerte.h"
 #include "CPU.h"
 
-
+//! Buffer que almacena datos leidos de la sd para ser enviados
 dato Buffer_Envio[cantidad_datos][tam_dato]; // Vector para la transmision
+//!Buffer que almacena datos tomados por el gps para luego ser escritos en la sd
 dato Buffer_GPS[cantidad_datos][tam_dato];
+//! Buffer que almacena un dato recibido por el transceiver
 byte Buffer_Rx[tam_paquete];
+//! Vector que almacena una trama en crudo tomada por el gps
 trama_crudo tc[tam_trama_crudo];
+//! Vector que almacena la parte no variable de la trama GPRMC
 dato dat[tam_dato];
+//! Vector donde se copia dat para luego ser escrito en el buffer
 dato ult_dat[tam_dato];
+//! Bandera que indica si es la hora de recepcion de la señal de muerte
 byte ban_horasm=NO;
+//! Vector que almacena la direccion en donde debe realizarse la proxima escritura de datos
 byte dir_escritura[4];
+//! Vector que almacena la direccion en donde debe realizarse la proxima lectura de datos
 byte dir_lectura[4];
-unsigned long direccion;
-UINT32 u32SD_Block = 2601;
 
 //////// DECLARACION DE VARIABLES EXTERNAS //////////
 extern byte ban_fix;
@@ -29,10 +40,6 @@ extern byte ban_turno;
 extern byte index_Rx;
 extern byte ban_ACK;
 extern byte ban_vueltacomp;
-
-
-
-
 
 void main(void) {
 	error temp;                   
@@ -57,8 +64,7 @@ void main(void) {
   EnableInterrupts;
   /* include your code here */
   
-
-  for(;;) {
+ for(;;) {
   ///////////////// RECEPCION SEÑAL DE MUERTE ///////////////       
 
 		 if(ban_horasm == SI){

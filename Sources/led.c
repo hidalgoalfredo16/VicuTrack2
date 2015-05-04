@@ -1,33 +1,32 @@
-/*
- * led.c
- *
- *  Created on: Sep 24, 2014
- *      Author: usuario
+/*!
+ @file led.c
+ @brief Define variables e implementa funciones necesarias para el manejo de los leds
  */
+
 #include "led.h"
 #include "CPU.h"
 #include "error.h"
 
 error Init_LED(void){
-	PTCDD_PTCDD5 =1;
-	PTCDD_PTCDD4 =1;
+	LedR_Direccion = 1;
+	LedV_Direccion = 1;
 	return _ERR_OK;
 }
 
 void LED_PrenderR(){
-    PTCD_PTCD5 = 1;
+	LedR = 1;
 }
 
 void LED_ApagarR(){
-    PTCD_PTCD5 = 0;
+	LedR = 0;
 }
 
 void LED_PrenderV(){
-    PTCD_PTCD4 = 1;
+	LedV = 1;
 }
 
 void LED_ApagarV(){
-    PTCD_PTCD4 = 0;
+	LedV = 0;
 }
 
 void LED_BrillarR(int a, word b){

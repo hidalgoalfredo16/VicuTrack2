@@ -1,10 +1,14 @@
 /*!
-@file error.h
-@brief Declara las variables para el manejo de errores.
-*/
+ @file error.h
+ @brief Declara constantes para el manejo de errores
+ */
+
 #include "derivative.h"
 
+//! Define el tipo de dato 'error' como un entero
 #define error byte
+
+//! Define constantes para identificar los distintos tipos de errores
 #define _ERR_OK 1
 #define _ERR_COMAS 2
 #define _ERR_TRAMA_CRUDO 3

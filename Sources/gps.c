@@ -1,22 +1,24 @@
-/*
- * gps.c
- *
- *  Created on: Sep 24, 2014
- *      Author: usuario
+/*!
+ @file gps.c
+ @brief Define variables e implementa funciones necesarias para el manejo del gps
  */
+
 #include"gps.h"
 #include"error.h"
 #include "led.h"
 #include "CPU.h"
 
-//***********************Variables Globales**********************
+//! Variable que indica, cuando el dispositivo duerme, despues de cuantas interrupciones del RTC el dispostivo despertará
 byte vueltasRTC;
+
+//! Bandera que indica si el gps fixeo.
+/*
+ @li @c 0 El gps no fixeo
+ @li @c 1 El gps fixeo
+ */
 byte ban_fix;
 
-//***********************Variables Externas**********************
 extern dato dat[tam_dato];
-extern long dir_base_lat;
-extern long dir_base_lon;
 extern byte ban_horasm;
 
 error Init_GPS(void){
@@ -29,7 +31,7 @@ error Init_GPS(void){
     // SCIC2: TIE=0,TCIE=0,RIE=0,ILIE=0,TE=0,RE=1,RWU=0,SBK=0
     SCI1C2 = 0x04; 
 	// pin 15 como salida - PTC1
-    PTCDD_PTCDD1 = 1;
+    GPS_VCC_DIR = 1;
     // bandera para saber si fixea o no, y dar mas tiempo
     ban_fix=0;
            
@@ -37,12 +39,12 @@ error Init_GPS(void){
 }
 
 error GPS_Prender(void){
-    PTCD_PTCD1 = 0;
+	GPS_VCC = 0;
     return 1;
 }
 
 error GPS_Apagar(void){
- PTCD_PTCD1 = 1;   
+	GPS_VCC = 1;   
     return 1;
 }
 
@@ -71,11 +73,11 @@ error GPS_Analizar(trama_reducida* tr,trama_crudo* tc){
           tc[i+3]== _R && // Buscamos el comienzo de la trama que nos interesa $GPRMC
           tc[i+4]== _M && 
           tc[i+5]== _C){
-            if(tc[i+_POS_FIXED] != _FIXED){
+           /* if(tc[i+_POS_FIXED] != _FIXED){
             	ban_fix=0;
             	//LED_BrillarR(2,UNSEG);
                 return  _ERR_TRAMA_NO_FIXED;
-            }
+            }*/
             ban_fix=1;
             while(j < tam_trama_reducida){
                 tr[j]=tc[i];
@@ -226,14 +228,14 @@ error GPS_CopiarDato(dato d[],dato ud[]){
     return _ERR_OK;
 }
 
-error GPS_VerificarHora(){
+/*error GPS_VerificarHora(){
 	int hora_actual;
 	hora_actual= (dat[3]-0x30)+(dat[2]-0x30)*10+(dat[1]-0x30)*100+(dat[0]-0x30)*1000;
 	if ((hora_actual - _HORA_MUERTE) >= 0 && (hora_actual - _HORA_MUERTE) < 6)
 		return _ERR_OK;
 	else
 	    return _ERR_HORA;
-}
+}*/
 
 #pragma MESSAGE DISABLE C2705
 error GPS_SincronizarHM(){

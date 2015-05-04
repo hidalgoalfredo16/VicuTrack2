@@ -1,3 +1,8 @@
+/*!
+ @file transceiver.c
+ @brief Define variables e implementa funciones necesarias para el manejo del transceiver
+ */
+
 #include"Transceiver.h"
 #include"error.h"
 #include "CPU.h"
@@ -5,11 +10,9 @@
 #include "sd.h"
 #include "gps.h"
 
-//**********************Variables Globales*****************************
-int BORRAME=0;
-int BORRAME_ERRACK=0;
+//int BORRAME=0;
+//int BORRAME_ERRACK=0;
 
-extern byte id;
 extern byte Buffer_Rx[tam_paquete];
 extern byte ban_ACK;
 extern byte ban_bufferTx; 
@@ -31,9 +34,9 @@ error Init_Trans(void){
     // SCIC2: TIE=0,TCIE=0,RIE=1,ILIE=0,TE=1,RE=1,RWU=0,SBK=0
     SCI2C2 = 0x2C;
     // PIN set como salida
-    PTADD_PTADD0 = 1;
+    TransceiverSet_Direccion = 1;
     // PIN enable comosalida
-    PTADD_PTADD1 = 1;
+    TransceiverEnable_Direccion = 1;
     
     (void) Transceiver_Prender();
     (void) Transceiver_SetBajo();
@@ -62,22 +65,22 @@ error Init_Trans(void){
 }
 
 error Transceiver_SetAlto(){
-    PTAD_PTAD0 = 1;
+    TransceiverSet = 1;
     return _ERR_OK;
 }
 
 error Transceiver_SetBajo(){
-    PTAD_PTAD0 = 0;
+    TransceiverSet = 0;
     return _ERR_OK;
 }
 
 error Transceiver_Prender(){
-    PTAD_PTAD1 = 1; //Enable 1
+    TransceiverEnable = 1; //Enable 1
     return Transceiver_SetAlto();
 }
 
 error Transceiver_Apagar(){
-    PTAD_PTAD1 = 0; //Enable 0
+    TransceiverEnable = 0; //Enable 0
     return Transceiver_SetBajo();
 }
 
@@ -144,7 +147,7 @@ error Transceiver_Enviar(dato buf[][tam_dato], byte *j,byte *nrosec){
 
             }else{
                 intentos_ack++;
-                BORRAME++;
+                //BORRAME++;
                 if(intentos_ack==40)
                     bandera_incompleto=1;
             }
@@ -153,16 +156,6 @@ error Transceiver_Enviar(dato buf[][tam_dato], byte *j,byte *nrosec){
         }// cierra while intentos ack
     //ban_ACK=APAGADO;//no va es de prueba
     }//cierra while j < cant datos
-    return _ERR_ACK;
-}
-
-error Transceiver_RecibirACK(){
-    if(SCI2S1_RDRF != 0x00){       //si hay algo en el buffer de recepcion lo guardo
-    	(void)SCI2S1;
-        if(SCI2D == ACK ){
-            return _ERR_OK;
-        }
-    }
     return _ERR_ACK;
 }
 
@@ -182,7 +175,7 @@ error Transceiver_AnalizarACK(byte buf[],byte *nrosec){
         	if(buf[2]==*nrosec)
             	return _ERR_OK;
 
-    BORRAME_ERRACK++;
+    //BORRAME_ERRACK++;
     return _ERR_ACK;
 }
 
