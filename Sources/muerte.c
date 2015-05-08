@@ -27,7 +27,7 @@ void RUTINA_MUERTE(void){
 	byte intentos_gps=0,i=0,j=0;
 	minutos=((dat[1]-0x30)+(dat[0]-0x30)*10)*60+((dat[3]-0x30)+(dat[2]-0x30)*10);
 	if(870<minutos){
-		diferencia=870+(1440-minutos);
+		diferencia=870+(1440-minutos); //14.5hs+(24hs-minutos)
 	}else{
 		diferencia=870-minutos;
 	}

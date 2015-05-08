@@ -60,12 +60,12 @@ void main(void) {
   for(;;) {
   ///////////////// RECEPCION SEÑAL DE MUERTE ///////////////       
 
-		 if(ban_horasm == SI){
+		 /*if(ban_horasm == SI){
 			EnableInterrupts;
 			(void)Transceiver_RecibirSM();	  
 			ban_horasm=NO;
 			vueltasRTC=MINUTO; //Duerme 1 hora
-		 }
+		 }*/
 		 
 
  /////////////// PRENDEMOS EL GPS 5 SEG PARA QUE FIXEE ///////////////			  
@@ -101,7 +101,7 @@ void main(void) {
 			LED_BrillarV(2,UNSEG); // Avisa que tengo un dato bien tomado del GPS
 			ban_datogps=1;	 //indica q logro tomar un dato gps.
 			vueltasRTC=VUELTAS;      //para prueba
-			(void)GPS_SincronizarHM(); //Corregimos el RTC para despertar en horario de señal de muerte
+//			(void)GPS_SincronizarHM(); //Corregimos el RTC para despertar en horario de señal de muerte
 			
  ///////// CONTROLAMOS SI SE MOVIO EL MOVIL ////////////
 			LED_ApagarV();
@@ -143,7 +143,7 @@ void main(void) {
 		
 		if(ban_datogps==1){
 			ban_datogps=0;
-			if(/*(GPS_CompararBase(dat)==_ERR_OK) && */(ban_bufferTx==0 || ban_SDvacia==0)){ // si esta cerca de la base y tiene algo para transmitir 
+			if((GPS_CompararBase(dat)==_ERR_OK) && (ban_bufferTx==0 || ban_SDvacia==0)){ // si esta cerca de la base y tiene algo para transmitir 
 				EnableInterrupts;
 				vueltasRTC=VUELTAS;//tiene mas prioridad la Tx a la base q la SM
 				ban_horasm=NO;//
