@@ -1,17 +1,15 @@
-/*
- * storage.c
- *
- *  Created on: Apr 18, 2015
- *      Author: usuario
+/*!
+ @file storage.c
+ @brief Define variables e implementa funciones necesarias para el manejo del storage
  */
-/* Includes */
+
 #include "storage.h"
 #include "sd.h"
 #include "types.h"
 
 /* File Handlers */
-WriteRHandler WHandler;
-ReadRHandler  RHandler;
+//WriteRHandler WHandler;
+//ReadRHandler  RHandler;
 
 /* File Buffers */
 //UINT8 ag8FATReadBuffer[512];
@@ -27,7 +25,6 @@ UINT16 u16Main_Offset=0;
 
 #pragma warn_implicitconv off
 
-/***************************************************************************************/
 UINT32 LWordSwap(UINT32 u32DataSwap) {
     UINT32 u32Temp;
     u32Temp = (u32DataSwap & 0xFF000000) >> 24;
@@ -36,7 +33,7 @@ UINT32 LWordSwap(UINT32 u32DataSwap) {
     u32Temp +=(u32DataSwap & 0xFF)       << 24;
     return(u32Temp);    
 }
-/***************************************************************************************/
+
 void FAT_Read_Master_Block(UINT8* ag8FATReadBuffer) {
     static MasterBoot_Entries     *pMasterBoot; //Make static for debug
     static PartitionTable_Entries *PartitionTable; //Make static for debug
@@ -57,7 +54,7 @@ void FAT_Read_Master_Block(UINT8* ag8FATReadBuffer) {
     /*
     while(ag8FATReadBuffer[0]!= 0xEB || ag8FATReadBuffer[1]!=0x3C || ag8FATReadBuffer[2]!=0x90) //Recorre linealmente el volumen en busca del patron que identifica a la primera particion
     {
-        GetPhysicalBlock(u16Main_Offset++,&ag8FATReadBuffer[0]);  //Si encuentra el patron, obtiene el bloque y lo carga en ag8FATReadBuffer
+        SD_ReadSector(u16Main_Offset++,&ag8FATReadBuffer[0]);  //Si encuentra el patron, obtiene el bloque y lo carga en ag8FATReadBuffer
         __RESET_WATCHDOG();
     }
     u16Main_Offset--; //Corrige la direccion donde se encuentra la primera particion
@@ -75,7 +72,7 @@ void FAT_Read_Master_Block(UINT8* ag8FATReadBuffer) {
     //Supongo que la primera particion se encuentra en el sector0
     u16Main_Offset = 0;
      //Cargo sector0 en ag8FATReadBuffer (arreglo de bytes sin estructura)
-    GetPhysicalBlock(0, &ag8FATReadBuffer[0]);
+    SD_ReadSector(0, &ag8FATReadBuffer[0]);
 
     //Supongo que sector0 es el sector correspondiente a la primera particion
     pMasterBoot = (MasterBoot_Entries*)ag8FATReadBuffer; 
@@ -89,7 +86,7 @@ void FAT_Read_Master_Block(UINT8* ag8FATReadBuffer) {
       //Calculo la ubicacion de la primera particion y la almaceno en u16Main_Offset
       u16Main_Offset = (UINT16)LWordSwap(PartitionTable->Partition[0].LBAStart); 
       //Obtiene sector que contiene la primera particion, de acuerdo al offset calculado      
-      GetPhysicalBlock(u16Main_Offset, &ag8FATReadBuffer[0]);                   
+      SD_ReadSector(u16Main_Offset, &ag8FATReadBuffer[0]);                   
     }
     //Si la primera particion esta en el sector0 (primer sector obtenido) ni en el sector calculado (segundo sector obtenido), salgo
     if( (pMasterBoot->JMP_NOP[0] != 0xEB || pMasterBoot->JMP_NOP[1] != 0x3C || pMasterBoot->JMP_NOP[2] != 0x90 ) || (pMasterBoot->ExcecutableMarker[0] != 0x55 || pMasterBoot->ExcecutableMarker[1] != 0xAA) ) return; 

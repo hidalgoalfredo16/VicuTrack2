@@ -1,8 +1,6 @@
-/*
- * muerte.c
- *
- *  Created on: Sep 30, 2014
- *      Author: Agustin
+/*!
+ @file muerte.c
+ @brief Define variables e implementa funciones necesarias para el manejo de la función de muerte.
  */
 
 #include <hidef.h>
@@ -17,11 +15,10 @@
 extern trama_crudo tc[tam_trama_crudo];
 extern dato dat[tam_dato];
 extern byte ban_finao;
-extern byte id;
-int diferencia;
 
 
 void RUTINA_MUERTE(void){
+	int diferencia;
 	trama_reducida tr[tam_trama_reducida];
 	int minutos;
 	byte intentos_gps=0,i=0,j=0;

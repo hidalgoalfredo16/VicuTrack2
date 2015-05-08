@@ -1,6 +1,6 @@
-/*
+/*!
  @file cpu.h
- !@brief Declara constantes y funciones para el manejo del cpu
+ @brief Declara constantes y funciones para el manejo del cpu
  */
 
 #include "derivative.h"
@@ -40,7 +40,15 @@
 #define flag_inicio 0x08  //  00001000
 #define flag_turno  0x0C  //  00010000
 
+//! Define el pin utilizado para medir la tension de la bateria
 #define TENSION_OUT PTAD_PTAD7
+
+//! Constante que define la latitud de la posicion de la base
+#define dir_base_lat 26505903 //89600000;//26481282;//26481282 gabriel//26505903 facultad;
+//! Constante que define la longitud de la posicion de la base
+#define dir_base_lon 65138195 //65122019;//65122019 gabriel//65138195 facultad;
+//! Constante que define el id de cada movil
+#define id 0x11
 
 extern byte vueltasRTC;
 extern int diferencia;

@@ -1,11 +1,25 @@
 /*!
-@file led.h
-@brief Declara las variables y funciones públicas para el manejo de leds indicadores
-*/
+ @file led.h
+ !@brief Declara constantes y funciones para el manejo de los leds
+ */
+
 #include "derivative.h"
 #include"error.h"
 
+//! Define la direccion de la pata del micro conectada al led rojo
+#define LedV_Direccion PTCDD_PTCDD5
+//! Define la pata del micro conectada al led rojo
+#define LedV PTCD_PTCD5
+//! Define la direccion de la pata del micro conectada al led verde
+#define LedR_Direccion PTCDD_PTCDD4
+//! Define la pata del micro conectada al led verde
+#define LedR PTCD_PTCD4
+
 //! Inicializacion del LED
+/*!
+ 	Setea como salida las patas del microprocesador conectadas al led
+ 	@return 1 _ERR_OK Se inicializo correctamente 
+ */
 error Init_LED(void);
 
 //! Enciende led rojo

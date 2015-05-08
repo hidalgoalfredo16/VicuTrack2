@@ -1,118 +1,126 @@
-//! @file Transceiver.h
-//! @brief Contiene todas las funciones que requieren la utilizacion del dispositivo
+/*!
+ @file transceiver.h
+ @brief Declara constantes y funciones para el manejo del transceiver
+ */
+
 #include "derivative.h"
 #include"error.h"
 #include "gps.h"
 
-#define TIMERACK 50
-#define ACK 65
-#define NACK 33
+//! Define la posicion en que se encuentra LAT en el vector que guarda el dato
 #define POS_LAT 12
+//! Define la posicion en que se encuentra LONG en el vector que guarda el dato
 #define POS_LONG 22
-#define INTENTOSENVIO 50
 
+//! Define la direccion de la pata del micro conectada al set del transceiver
+#define TransceiverSet_Direccion PTADD_PTADD0
+//! Define la pata del micro conectada al set del transceiver
+#define TransceiverSet PTAD_PTAD0
+//! Define la direccion de la pata del micro conectada al enable del transceiver
+#define TransceiverEnable_Direccion PTADD_PTADD1
+//! Define la pata del micro conectada al enable del transceiver
+#define TransceiverEnable PTAD_PTAD1
 
 //! Inicializacion del Transceiver
+/*!
+ Configura el puerto serial mediante registros SCIxBDH, SCIxC1, SCIxC2, SCIxC3. 
+ Configura pins de set y enable como salida. Configura set en bajo y enable en alto
+ Configura los parametros del transceiver f=455MHz, Data Rate 9600bps, output power 100mw, UART data rate 9600bps, no checkout
+ @return Indica si los parametros del transceiver se configuraron correctamente
+ 	 @li @c 1 _ERR_OK Los parametros del transceiver se configuraron correctamente
+ 	 @li @c 16 _ERR_DISTINTO Los parametros del transceiver no se configuraron correctamente
+ */
 error Init_Trans(void);
 
-//! Seteo de parametros, ver hoja de datos, no entiendo
+//! Coloca un 1 en la pata Set del Transceiver
+/*!
+ @return 1 _ERR_OK
+ */
 error Transceiver_SetAlto(void);
 
-//! Seteo de parametros, ver hoja de datos, no entiendo
+//! Coloca un 0 en la pata Set del Transceiver
+/*!
+ @return 1 _ERR_OK
+ */
 error Transceiver_SetBajo(void);
 
 //! Prende el transceiver
-/*! Coloca un "1" en PTAD_PTAD1 que está conectado al Enable del Transceiver*/
+/*! 
+Coloca un "1" en el Enable y un '1' en el Set del Transceiver
+@return 1 _ERR_OK
+*/
 error Transceiver_Prender(void);
 
 //! Apaga el transceiver
-/*! Coloca un "0" en PTAD_PTAD1 que está conectado al Enable del Transceiver*/
+/*! 
+Coloca un "0" en el Enable y un '0' en el Set del Transceiver
+@return 1 _ERR_OK
+*/
 error Transceiver_Apagar(void);
 
 //! Permite transmitir un caracter
 /*!
-    @param[in]
-    @li @c Recibe el caracter que se desea transmitir
-
-    SCI2S1: This register has eight read-only status flags.
-        _TDRE:  Transmit Data Register Empty Flag — TDRE is set out of reset and when a transmit data value transfers from
-        (bit7)  the transmit data buffer to the transmit shifter, leaving room for a new character in the buffer. To clear TDRE,
-                read SCIxS1 with TDRE = 1 and then write to the SCI data register (SCIxD).
-                    0 Transmit data register (buffer) full.
-                    1 Transmit data register (buffer) empty.
-        _TC:    Transmission Complete Flag — TC is set out of reset and when TDRE = 1 and no data, preamble, or break
-        (bit6)      character is being transmitted.
-                    0 Transmitter active (sending data, a preamble, or a break).
-                    1 Transmitter idle (transmission activity complete).
-                TC is cleared automatically by reading SCIxS1 with TC = 1 and then doing one of the following three things:
-                    • Write to the SCI data register (SCIxD) to transmit new data
-                    • Queue a preamble by changing TE from 0 to 1
-                    • Queue a break character by writing 1 to SBK in SCIxC2
-
-    SCI2D:  SCI Data Register (SCIxD) This register is actually two separate registers. Reads return the contents of the
-            read-only receive data buffer and writes go to the write-only transmit data buffer. Reads and writes of this register
-            are also involved in the automatic flag clearing mechanisms for the SCI status flags
-
-    La función consiste en:
-        Cargar el byte en SCI2D
-        Esperar que el buffer se vacie
-        Esperar que se complete la transmision
+Carga el dato a transmitir en el registro SCI2D. Espera a que el buffer se vacie. Espera a que la transmision se complete
+@param[in] byte Recibe el caracter que se desea transmitir
+@return 1 _ERR_OK
 */
 error Transceiver_EnviarByte(byte);
 
 //! Permite recibir un caracter
-/*!
-    SCI2S1_RDRF (bit5): Receive Data Register Full Flag — RDRF becomes set when a character transfers from the receive shifter
-                        into the receive data register (SCIxD). To clear RDRF, read SCIxS1 with RDRF = 1 and then read the SCI
-                        data register (SCIxD).
-                            0 Receive data register empty.
-                            1 Receive data register full.
-
-    La función consiste en:
-        Controlar si se recibio un dato
-        Copiar el caracter desde SCI2D
-
+/*! Controla el bit SCI2S1_RDRF para saber si hay un dato en el buffer de recepcion. Si hay un dato lo almacena.
+@param[out] Rxdat Almacena el byte recibido
+@return Indica si hubo un dato en el buffer de recepcion
+	@li @c 1 _ERR_OK Habia un dato y se guardo
+	@li @c 9 _ERR_RXEMPTY No habia un dato
 */
 error Transceiver_RecibirByte(byte *);
 
 //! Realiza el envio de datos desde el dispositivo a la base
 /*!
-    @param[in]
-    @li @c Matriz con los datos a ser transmitidos
-    @li @c Contador de los datos transmitidos
-    @li @c Nº de secuencia de los datos
+ Envia un bloque de datos de 512 bytes a la base 
+ Envia el id del dispositivo, el flag indicando que es un dato, el numero de secuencia y el dato en si
+ Se espera el ack por parte de la base
+ En caso de que el dato enviado haya sido el ultimo del buffer, se carga el buffer con datos de la sd, si ésta los tuviera
+ @param[in] buf Buffer con los datos a ser transmitidos
+ @param[inout] j Contador de los datos transmitidos
+ @param[inout] nrosec Nº de secuencia de los datos
+ @return 13 _ERR_ACK
 */
 error Transceiver_Enviar(dato buf[][tam_dato],byte *j,byte *nrosec);
 
-//! Permite recibir un ACK
+//! Recibe un paquete y se fija si es un turno para el
 /*!
-    La función consiste en:
-        Controlar si se recibio un dato en SCI2S1_RDRF
-        Controlar que el byte recibido en SCI2D corresponde con un ACK
-
-*/
-error Transceiver_RecibirACK(void);
-
-//! Recibe un paquete y se fija si era para el
-/*!
-    La función consiste en:
-        Controlar si el id es el correspondiente
-        Controlar que sea el turno correcto ???????
+Controlar si el id es el correspondiente y si es un paquete del tipo 'turno'
+@param[in] buf Contiene el dato recibido y que debe analizarse
+@return Indica si el dato es un turno para mi
+	@li @c 1 _ERR_OK El dato es un turno para mi
+ 	@li @c 14 _ERR_TURNO El dato no es un turno y/o no es para mi
 */
 error Transceiver_Analizar(byte buf[]);
 
 //! Permite saber si el ACK recibido es correcto
 /*!
-    La función consiste en:
-        Controlar si el Id es el que corresponde
-        Controlar que sea un ACK
-        Verificar que el nº de secuencia sea correcto
-        En caso de que algo no este bien, se retorna un error
+Controla si el Id es el que corresponde, controla que sea un ACK y verifica que el nº de secuencia sea correcto
+@param[in] buf Contiene el dato recibido y que debe analizarse
+@param[in] nrosec Indica el numero de secuencia del dato
+@return Inidica si el dato es el ACK esperado
+	@li @c 1 _ERR_OK El dato recibido es el ACK esperado
+ 	@li @c 13 _ERR_ACK El dato recibido no es el ACK esperado      
 */
 error Transceiver_AnalizarACK(byte buf[],byte*);
 
 //! Realiza el control para saber si el dato recibido es correcto o no
+/*
+Realiza un control del checksum
+@return Indica si el checksum es correcto o no 
+	@li @c 1 _ERR_OK El checksum es correcto
+	@li @c 12 _ERR_DATO El checksum no es correcto
+ */
 error Transceiver_ControlarDato(void);
 
 //! Recibe la señal de un animal muerto y guarda la informacion
+/*!
+Enciende el transceiver y espera a recibir datos, si es asi, los almacena en un buffer y posteriormente en la sd
+@return 1 _ERR_OK
+ */
 error Transceiver_RecibirSM(void);
