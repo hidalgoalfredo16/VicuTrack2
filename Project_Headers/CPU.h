@@ -8,8 +8,8 @@
 //* Constantes enviadas a la funcion CPU_PrenderRTC y determinan en que tiempo el RTC interrumpe
 #define RTC_1SEG  0x9F  // Delay de 1 segundo
 #define RTC_1MS   0x98  // Delay de 1 msegundo
-#define RTC_MED   0x9E  // No Sabemos q es
-#define RTC_01S   0x9D  // No Sabemos q es
+#define RTC_MED   0x9E  // Delay medio seg
+#define RTC_01S   0x9D  // Delay 0,1 seg
 #define RTC_1MIN  0x00  // Delay de 1 minuto
 
 //! Constante utilizada para dar valor a las siguientes variables: ban_vueltacomp, ban_turno, ban_ACK, ban_muerte, ban_finao

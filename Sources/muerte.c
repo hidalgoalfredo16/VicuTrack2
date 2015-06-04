@@ -26,7 +26,11 @@ void RUTINA_MUERTE(void){
 	//870min = 14:30hs (UTM) = 11:30 (UTM-3)
 	//1440min = 24hs
 	if(870<minutos){
+<<<<<<< HEAD
 		diferencia=870+(1440-minutos); 	//Lo que falta para las 11:30 del dia siguiente
+=======
+		diferencia=870+(1440-minutos); //14.5hs+(24hs-minutos)
+>>>>>>> be01d452ae1b0787c381242c587192573145c5e9
 	}else{
 		diferencia=870-minutos;		   	//Lo que falta para las 11:30 del mismo dia
 	}
