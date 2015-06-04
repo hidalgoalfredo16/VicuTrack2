@@ -106,7 +106,7 @@ error Init_CPU(void){
 	    //RTIF=1, RTCLKS=11, RTIE=1, RTCPS=0110
 	    //RTCSC =0xF6;
 	    //RTCMOD=0x01;
-	    id=0x11;
+	    //id=0x11;
 	    ban_vueltacomp = APAGADO;     //=0apagada =1corriendo =2finalizado
 	    ban_turno=APAGADO;          //=0apagada =1corriendo =2finalizado
 	    ban_bufferTx=1;             //1=no tiene datos
@@ -114,8 +114,8 @@ error Init_CPU(void){
 	    ban_ACK=APAGADO;
 	    ban_muerte=APAGADO;
 	    ban_finao=APAGADO;
-	    dir_base_lat=26489011;//89600000;//26481282;//26481282 gabriel//26505903 facultad//26489011 Alfredo;
-	    dir_base_lon=65113876;//65122019;//65122019 gabriel//65138195 facultad// 65113876 Alfredo;
+	    //dir_base_lat=26489011;//89600000;//26481282;//26481282 gabriel//26505903 facultad//26489011 Alfredo;
+	    //dir_base_lon=65113876;//65122019;//65122019 gabriel//65138195 facultad// 65113876 Alfredo;
 	    index_Rx=0;
 	    return _ERR_OK;
 }
