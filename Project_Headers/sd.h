@@ -41,7 +41,7 @@
 #define SD_OK				0x00
 
 //! Define la direccion de memoria del archivo punteros.bin en la tarjeta sd
-#define DIRECCION_BIN 2600 // Direccion del archivo donde se guardan los punteros de lectura y escritura, 8GB=2600 4GB=680 512MB=2576
+//#define DIRECCION_BIN 2600 // Direccion del archivo donde se guardan los punteros de lectura y escritura, 8GB=2600 4GB=680 512MB=2576
 		
 //! Función para envio de un comando a la tarjeta SD
 /*! Esta función recibe solo la respuesta  del comando que puede ser

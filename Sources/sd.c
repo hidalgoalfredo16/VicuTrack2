@@ -399,7 +399,7 @@ error SD_CalculaDireccion(byte * dir, dato buf[][tam_dato]){
     for(;i<8;i++)
     	buf[0][i] = dir_escritura[i-4];
     
-    (void) SD_WriteSector((UINT32) DIRECCION_BIN, (UINT8 *) buf); //2600 sector del archivo binario, hacer vble global
+    (void) SD_WriteSector((UINT32) u16FAT_Data_BASE, (UINT8 *) buf); //2600 sector del archivo binario, hacer vble global
     return _ERR_OK;            
 }
 
