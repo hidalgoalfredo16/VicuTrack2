@@ -60,7 +60,11 @@ void main(void) {
   ult_lon=0;
   vueltasRTC=VUELTAS;
 
-  
+  for (;;){
+	  Buffer_Envio[0][0]=CPU_DameTension();
+	  Buffer_Envio[0][1]=CPU_DameTemperatura();
+	  __RESET_WATCHDOG();
+  }
   EnableInterrupts;
   /* include your code here */
   

@@ -3,8 +3,8 @@
 NAMES END /* CodeWarrior will pass all the needed files to the linker by command line. But here you may add your own files too. */
 
 SEGMENTS /* Here all RAM/ROM areas of the device are listed. Used in PLACEMENT below. */
-    Z_RAM                    =  READ_WRITE   0x0080 TO 0x00FF;
-    RAM                      =  READ_WRITE   0x0100 TO 0x06AF;
+    Z_RAM                    =  READ_WRITE   0x0080 TO 0x00FF; //Preguntarle a Esteban si lo saco!!!!!!!!!!!!!!!!
+    RAM                      =  READ_WRITE   0x0080 TO 0x06AF;
     ROM                      =  READ_ONLY    0x8000 TO 0xFFAD;
  /* INTVECTS                 =  READ_ONLY    0xFFC0 TO 0xFFFF; Reserved for Interrupt Vectors */
 END

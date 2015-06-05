@@ -203,7 +203,7 @@ error Transceiver_RecibirSM(){
 	 	while(ban_muerte==CORRIENDO){
 	 	}
 	 	if(ban_muerte==HAYPAQUETE){
-	    	(void)CPU_ApagarRTC();
+	    	(void)CPU_ApagarRTC(); 
 	    	if(Transceiver_ControlarDato()==_ERR_OK){
 	    		if(GPS_EscribirBuffer(Buffer_Rx,Buffer_GPS)== _ERR_OVF){
 					//(void)SD_Init();
