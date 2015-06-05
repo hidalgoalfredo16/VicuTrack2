@@ -23,15 +23,18 @@ void RUTINA_MUERTE(void){
 	int minutos;
 	byte intentos_gps=0,i=0,j=0;
 	minutos=((dat[1]-0x30)+(dat[0]-0x30)*10)*60+((dat[3]-0x30)+(dat[2]-0x30)*10);
+	//870min = 14:30hs (UTM) = 11:30 (UTM-3)
+	//1440min = 24hs
 	if(870<minutos){
-		diferencia=870+(1440-minutos); //11.30hs+(24hs-minutos)
-	}else{
-		diferencia=870-minutos;
-	}
+			diferencia=870+(1440-minutos); 	//Lo que falta para las 11:30 del dia siguiente
+		}
+	else{
+			diferencia=870-minutos;		   	//Lo que falta para las 11:30 del mismo dia
+		}
 	ban_finao=CORRIENDO;
 	CPU_PrenderRTC(RTC_1SEG,MINUTO);
 	while(ban_finao==CORRIENDO){
-		asm{STOP
+		asm{STOP						//Duerme hasta las 11:30 (UTM-3)
 		}
 	}
 	for(;;){
@@ -50,11 +53,11 @@ void RUTINA_MUERTE(void){
 		if(intentos_gps<5){
 			(void)GPS_Dato(dat,tr);// limpiamos la trama y dejamos solo los datos importantes
 			minutos=((dat[1]-0x30)+(dat[0]-0x30)*10)*60+((dat[3]-0x30)+(dat[2]-0x30)*10);// convertimos a minutos la hora del gps
-			diferencia=900-minutos;
+			diferencia=900-minutos;		//Lo que falta para las 12:00 (UTM-3)
 			ban_finao=CORRIENDO;
 			CPU_PrenderRTC(RTC_1SEG,MINUTO);
 			while(ban_finao==CORRIENDO){
-				asm{STOP
+				asm{STOP				//Duerme hasta las 12:00 (UTM-3)		
 				}
 			}
 			MUERTE_ArmarPaquete();
@@ -65,15 +68,15 @@ void RUTINA_MUERTE(void){
 				for(j=0;j<10;j++)
 					Cpu_Delay100US(UNSEG);
 			}
-			diferencia=1400;
+			diferencia=1400;			
 			ban_finao=CORRIENDO;
 			CPU_PrenderRTC(RTC_1SEG,60);
 			while(ban_finao==CORRIENDO){
-				asm{STOP;
+				asm{STOP;				//Duerme 23:20 horas
 				}
 			}
 		}else{   //cierra el if de 5 intentos
-			diferencia=1400;
+			diferencia=1400;			//Duerme 23:20 horas
 			ban_finao=CORRIENDO;
 			CPU_PrenderRTC(RTC_1SEG,60);
 			while(ban_finao==CORRIENDO){
@@ -82,7 +85,7 @@ void RUTINA_MUERTE(void){
 			}
 		}
 		intentos_gps=0;
-	}// llave del FOR
+	}	// llave del FOR
 
 }
 

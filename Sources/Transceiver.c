@@ -203,11 +203,9 @@ error Transceiver_RecibirSM(){
 	 	while(ban_muerte==CORRIENDO){
 	 	}
 	 	if(ban_muerte==HAYPAQUETE){
-	    	(void)CPU_ApagarRTC(); 
+	    	(void)CPU_ApagarRTC(); //yo lo pondria dentro del siguiente if
 	    	if(Transceiver_ControlarDato()==_ERR_OK){
 	    		if(GPS_EscribirBuffer(Buffer_Rx,Buffer_GPS)== _ERR_OVF){
-					//(void)SD_Init();
-					//(void)SD_Prender();
 					(void)SD_Escribir(dir_escritura,Buffer_GPS);// escribimos la SD con el buffer lleno
 					//(void)SD_CalculaDireccion(dir_escritura);// actualizamos la dir escritura de la SD
 					(void)SD_CalculaDireccion(dir_escritura,Buffer_GPS);

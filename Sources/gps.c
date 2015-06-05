@@ -73,11 +73,11 @@ error GPS_Analizar(trama_reducida* tr,trama_crudo* tc){
           tc[i+3]== _R && // Buscamos el comienzo de la trama que nos interesa $GPRMC
           tc[i+4]== _M && 
           tc[i+5]== _C){
-           /* if(tc[i+_POS_FIXED] != _FIXED){
+          if(tc[i+_POS_FIXED] != _FIXED){
             	ban_fix=0;
             	//LED_BrillarR(2,UNSEG);
                 return  _ERR_TRAMA_NO_FIXED;
-            }*/
+            }
             ban_fix=1;
             while(j < tam_trama_reducida){
                 tr[j]=tc[i];
@@ -241,8 +241,8 @@ error GPS_CopiarDato(dato d[],dato ud[]){
 error GPS_SincronizarHM(){
 	int hora_actual;
 	hora_actual= (dat[3]-0x30)+(dat[2]-0x30)*10+(dat[1]-0x30)*100+(dat[0]-0x30)*1000;
-	if ((_HORA_MUERTE - hora_actual) > 0 && (_HORA_MUERTE - hora_actual) < 100){
-		vueltasRTC=(_HORA_MUERTE - hora_actual)-40;
+	if ((_HORA_MUERTE - hora_actual) > 0 && (_HORA_MUERTE - hora_actual) < 100){ //Si hora_actual>11:00 (UTM-3) && hora_actual<12:00 (UTM-3)
+		vueltasRTC=(_HORA_MUERTE - hora_actual)-40; //vueltasRTC toma el valor de los minutos que faltan hasta la hora muerte
 		ban_horasm=SI;
 	}
 	return _ERR_OK;
