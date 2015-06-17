@@ -60,11 +60,11 @@ void main(void) {
   ult_lon=0;
   vueltasRTC=VUELTAS;
 
-  for (;;){
+  /*for (;;){
 	  Buffer_Envio[0][0]=CPU_DameTension();
 	  Buffer_Envio[0][1]=CPU_DameTemperatura();
 	  __RESET_WATCHDOG();
-  }
+  }*/
   EnableInterrupts;
   /* include your code here */
   
@@ -154,7 +154,7 @@ void main(void) {
 		
 		if(ban_datogps==1){
 			ban_datogps=0;
-			if((GPS_CompararBase(dat)==_ERR_OK) && (ban_bufferTx==0 || ban_SDvacia==0)){ // si esta cerca de la base y tiene algo para transmitir 
+			if(/*(GPS_CompararBase(dat)==_ERR_OK) &&*/ (ban_bufferTx==0 || ban_SDvacia==0)){ // si esta cerca de la base y tiene algo para transmitir 
 				EnableInterrupts;
 				vueltasRTC=VUELTAS;//tiene mas prioridad la Tx a la base q la SM
 				ban_horasm=NO;//
