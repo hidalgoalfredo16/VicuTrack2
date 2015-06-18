@@ -20,6 +20,8 @@ byte ban_fix;
 
 extern dato dat[tam_dato];
 extern byte ban_horasm;
+extern byte dir_base_lat[4];
+extern byte dir_base_lon[4];
 
 error Init_GPS(void){
     SCI1BDH = 0x00;             
@@ -164,7 +166,7 @@ error GPS_EscribirBuffer(dato dat[], dato buf[][tam_dato]){
 
 error GPS_CompararBase(dato dat[]){
 	int i;
-	long res_lat,res_lon,lat=0,p=1,lon=0;
+	long Auxiliar, res_lat,res_lon,lat=0,p=1,lon=0;
 	for(i=11;i>3;i--) {
 		lat=lat+((long)dat[i]-48)*p;
 		p=p*10;
@@ -174,8 +176,27 @@ error GPS_CompararBase(dato dat[]){
 		lon=lon+((long)dat[i]-48)*p;
 		p=p*10;
 	}
-	res_lat=dir_base_lat - lat;
-	res_lon=dir_base_lon - lon;
+	
+	Auxiliar = dir_base_lat[0];
+	Auxiliar <<= 8;
+	Auxiliar |= dir_base_lat[1];
+	Auxiliar <<= 8;
+	Auxiliar |= dir_base_lat[2];
+	Auxiliar <<= 8;
+	Auxiliar |= dir_base_lat[3];
+	
+	res_lat=Auxiliar - lat;
+	
+	Auxiliar = dir_base_lon[0];
+	Auxiliar <<= 8;
+	Auxiliar |= dir_base_lon[1];
+	Auxiliar <<= 8;
+	Auxiliar |= dir_base_lon[2];
+	Auxiliar <<= 8;
+	Auxiliar |= dir_base_lon[3];
+	
+	res_lon=Auxiliar - lon;
+	
 	if(res_lat<0)
 		res_lat=res_lat*(-1); 
 	if(res_lon<0)

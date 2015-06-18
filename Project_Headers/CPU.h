@@ -44,11 +44,11 @@
 #define TENSION_OUT PTAD_PTAD7
 
 //! Constante que define la latitud de la posicion de la base
-#define dir_base_lat 26505903 //89600000;//26481282;//26481282 gabriel//26505903 facultad;
+//#define dir_base_lat 26505903 //89600000;//26481282;//26481282 gabriel//26505903 facultad;
 //! Constante que define la longitud de la posicion de la base
-#define dir_base_lon 65138195 //65122019;//65122019 gabriel//65138195 facultad;
+//#define dir_base_lon 65138195 //65122019;//65122019 gabriel//65138195 facultad;
 //! Constante que define el id de cada movil
-#define id 0x11
+//#define id 0x11
 
 extern byte vueltasRTC;
 extern int diferencia;

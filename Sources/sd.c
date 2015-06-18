@@ -22,6 +22,13 @@ extern dato Buffer_Envio[cantidad_datos][tam_dato];
 extern UINT16 u16FAT_Data_BASE;
 extern UINT32 direccion;
 
+//! Variable que almacena la latitud de la posicion de la base leida desde la tarjeta SD
+byte dir_base_lat[4];
+//! Variable que almacena la longitud de la posicion de la base leida desde la tarjeta SD
+byte dir_base_lon[4];
+//! Variable que define el id del movil leido de la tarjeta SD
+byte id;
+
 UINT8 SD_SendCommand(UINT8 u8SDCommand, UINT32 u32Param, UINT8 pu32Response[], UINT8 u8ResponseLength) {
   UINT8 u8R1;
   UINT8 u8Counter;
@@ -398,6 +405,11 @@ error SD_CalculaDireccion(byte * dir, dato buf[][tam_dato]){
     	buf[0][i] = dir_lectura[i];
     for(;i<8;i++)
     	buf[0][i] = dir_escritura[i-4];
+    for(;i<12;i++)
+    	buf[0][i] = dir_base_lat[i-8];
+    for(;i<16;i++)
+        buf[0][i] = dir_base_lon[i-12];
+    buf[0][i] = id;
     
     (void) SD_WriteSector((UINT32) u16FAT_Data_BASE, (UINT8 *) buf); //2600 sector del archivo binario, hacer vble global
     return _ERR_OK;            
@@ -431,6 +443,14 @@ error SD_LeerDireccion(){
     for( ;i<8;i++)
     	dir_escritura[i-4] = Buffer_Envio[0][i];
     
+    for( ;i<12;i++)
+    	dir_base_lat[i-8] = Buffer_Envio[0][i];
+    
+    for( ;i<16;i++)
+        dir_base_lon[i-12] = Buffer_Envio[0][i];
+    
+    id = Buffer_Envio[0][i];
+        
     (void)SD_DesAssert();
     (void)Cpu_Delay100US(100);
     //ban_bufferTx=0;
