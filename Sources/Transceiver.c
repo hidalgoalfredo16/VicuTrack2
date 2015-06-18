@@ -21,6 +21,7 @@ extern byte ban_muerte;
 extern dato Buffer_GPS[cantidad_datos][tam_dato];
 extern byte dir_escritura[4];
 extern byte dir_lectura[4];
+extern byte id;
 
 error Init_Trans(void){
     byte i, CadenaInit[19]="WR 455000 3 9 3 0\r\n"; //configuracion del transceiver f=455MHz, Data Rate 9600bps, output power 100mw

@@ -15,7 +15,7 @@
 extern trama_crudo tc[tam_trama_crudo];
 extern dato dat[tam_dato];
 extern byte ban_finao;
-
+extern byte id;
 
 void RUTINA_MUERTE(void){
 	int diferencia;
