@@ -140,14 +140,15 @@ error Transceiver_Enviar(dato buf[][tam_dato], byte *j,byte *nrosec){
 							ban_bufferTx=0; //buffer de transmision con datos
 						} else {
 							//En caso de que no haya mas datos para transmitir se envia una trama con flag ultimo
-							(void)Transceiver_EnviarByte(id);
-							(void)Transceiver_EnviarByte(flag_ultimo);
 							if((*nrosec)==255)
 								(*nrosec)=1;    //lo pongo a 1 porque si fuera 0 puedo tener problemas
 							(*nrosec)++;        //ya que en la base comparo con el anterior
+							Cpu_Delay100US(50);
+							(void)Transceiver_EnviarByte(id);
+							(void)Transceiver_EnviarByte(flag_ultimo);
 							(void)Transceiver_EnviarByte(*nrosec);
 							for(i=0;i<tam_dato;i++)
-								(void)Transceiver_EnviarByte(0xCD); //payload
+								(void)Transceiver_EnviarByte(0x55); //payload
 							CPU_PrenderRTC(RTC_01S,25);
 							            ban_ACK=APAGADO;
 							while(ban_ACK==APAGADO){
