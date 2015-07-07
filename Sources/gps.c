@@ -75,11 +75,11 @@ error GPS_Analizar(trama_reducida* tr,trama_crudo* tc){
           tc[i+3]== _R && // Buscamos el comienzo de la trama que nos interesa $GPRMC
           tc[i+4]== _M && 
           tc[i+5]== _C){
-          /*if(tc[i+_POS_FIXED] != _FIXED){
+          if(tc[i+_POS_FIXED] != _FIXED){
             	ban_fix=0;
             	//LED_BrillarR(2,UNSEG);
                 return  _ERR_TRAMA_NO_FIXED;
-            }*/
+            }
             ban_fix=1;
             while(j < tam_trama_reducida){
                 tr[j]=tc[i];

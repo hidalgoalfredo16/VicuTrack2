@@ -50,33 +50,31 @@ void main(void) {
   long ult_lat=0,ult_lon=0;
   trama_reducida tr[tam_trama_reducida];
   temp=Init_CPU();
-  temp=Init_Trans();
   temp=Init_LED();
+  Cpu_Delay100US(UNSEG);
+  temp=Init_Trans();
+  Cpu_Delay100US(UNSEG);
   temp=Init_GPS();
+  Cpu_Delay100US(UNSEG);
   temp=(error) SD_Init();
   LED_BrillarV(2,UNSEG);
-  LED_BrillarR(2,UNSEG);
+//  LED_BrillarR(2,UNSEG);
   ult_lat=0;
   ult_lon=0;
   vueltasRTC=VUELTAS;
 
-  /*for (;;){
-	  Buffer_Envio[0][0]=CPU_DameTension();
-	  Buffer_Envio[0][1]=CPU_DameTemperatura();
-	  __RESET_WATCHDOG();
-  }*/
   EnableInterrupts;
   /* include your code here */
   
  for(;;) {
   ///////////////// RECEPCION SEÑAL DE MUERTE ///////////////       
 
-		 /*if(ban_horasm == SI){
+		 if(ban_horasm == SI){
 			EnableInterrupts;
 			(void)Transceiver_RecibirSM();	  
 			ban_horasm=NO;
 			vueltasRTC=MINUTO; //Duerme 1 hora
-		 }*/
+		 }
 		 
 
  /////////////// PRENDEMOS EL GPS 5 SEG PARA QUE FIXEE ///////////////			  
@@ -86,9 +84,9 @@ void main(void) {
 		 CPU_ApagarRTC();
 		 (void)GPS_Prender();
 		 if(ban_fix==1)
-			CPU_PrenderRTC(RTC_1SEG,1);// espero para que fixee el GPS. default=40seg; con pila de fix = 5;
+			CPU_PrenderRTC(RTC_1SEG,40);// espero para que fixee el GPS. default=40seg; con pila de fix = 5;
 		 else
-			CPU_PrenderRTC(RTC_1SEG,1); //120
+			CPU_PrenderRTC(RTC_1SEG,180); //120
 		 
 		 
 		EnableInterrupts;
@@ -106,16 +104,16 @@ void main(void) {
 			 (void)GPS_Recibir(tc);// recibo datos en crudo del GPS durante 5 intentos
 				  
 		}while(GPS_Analizar(tr,tc) != _ERR_OK && intentos_gps++<5);// analizamos si son datos validos 5 veces
-		//(void)GPS_Apagar();
+		(void)GPS_Apagar();
 		 if(intentos_gps<5){
 			resp2 = GPS_Dato(dat,tr);// limpiamos la trama y dejamos solo los datos importantes
-			LED_BrillarV(2,UNSEG); // Avisa que tengo un dato bien tomado del GPS
+			//LED_BrillarV(2,UNSEG); // Avisa que tengo un dato bien tomado del GPS
 			ban_datogps=1;	 //indica q logro tomar un dato gps.
 			vueltasRTC=VUELTAS;      //para prueba
-//			(void)GPS_SincronizarHM(); //Corregimos el RTC para despertar en horario de señal de muerte
+			(void)GPS_SincronizarHM(); //Corregimos el RTC para despertar en horario de señal de muerte
 			
  ///////// CONTROLAMOS SI SE MOVIO EL MOVIL ////////////
-			LED_ApagarV();
+			//LED_ApagarV();
 			if(GPS_CompararDato(dat,&ult_lat,&ult_lon)==_ERR_OK){// (va !=)comparamos con la medicion anterior para saber si me movil
 				cont_muerte=0;									 //ERROR OK->Iguales
 				if(ban_datodif==1){// esta bandera dice que ya cambio entonces a cont. escribimos el ultimo dato 
@@ -136,10 +134,10 @@ void main(void) {
 					 //resp2=SD_CalculaDireccion(dir_escritura);
 					 resp2=SD_CalculaDireccion(dir_escritura,Buffer_GPS);
 					 (void)GPS_EscribirBuffer(dat,Buffer_GPS);
-					 for(i=0;i<10;i++){
+					 /*for(i=0;i<10;i++){
 						 LED_BrillarR(2,300); //Avisa que se esta escribiendo la SD
 						 LED_BrillarV(2,300);  
-					}
+					}*/
 				}
 			}
 			else{
@@ -210,7 +208,7 @@ void main(void) {
 	 
  ////////// TERCERA PARTE: DORMIR DURANTE 15 MINUTOS //////////
 		
-		 CPU_PrenderRTC(RTC_1SEG,1);//(RTC_1SEG,MINUTO);
+		 CPU_PrenderRTC(RTC_1SEG,MINUTO);//(RTC_1SEG,1);
 		 ban_vueltacomp=CORRIENDO;
 		 while(ban_vueltacomp!=FIN){  //me duermo durante 1 minuto x veces
 			 asm{STOP

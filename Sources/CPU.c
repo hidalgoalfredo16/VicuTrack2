@@ -153,7 +153,7 @@ void CPU_PrenderRTC(byte cps,int modulo){
 	// Configuracion del RTC
 	// RTIF=1, RTCLKS=00, RTIE=1, RTCPS=pasado en variable
 	//RTCSC=0x80;
-	RTCSC = 0x90 | (cps & 0x0F);  //xq pasa esto????
+	RTCSC = 0x90 | (cps & 0x0F);  
 	RTCMOD=(byte)modulo;
 }
 
@@ -209,7 +209,7 @@ interrupt VectorNumber_Vrtc void ISR_RTC(void){
 			 ban_vueltacomp=FIN;
 			 cont_vc=0;
 		}
-		LED_BrillarR(1,500);
+		//LED_BrillarR(1,500);
 	}
 	index_Rx=0;	//Preguntar
 	if(ban_turno==CORRIENDO) // esto se hace cuando esperamos turno.

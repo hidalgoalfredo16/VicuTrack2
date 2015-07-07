@@ -108,7 +108,7 @@ error Transceiver_Enviar(dato buf[][tam_dato], byte *j,byte *nrosec){
     int  i=0, intentos_ack=0, bandera_ACK=0, bandera_incompleto=0;
     while(*j<cantidad_datos && bandera_incompleto==0){
         intentos_ack=0;
-        while(intentos_ack<40){
+        while(intentos_ack<10){//intentos_ack<40
             (void)Transceiver_EnviarByte(id);
             (void)Transceiver_EnviarByte(flag_dato);
             (void)Transceiver_EnviarByte(*nrosec);
@@ -118,7 +118,7 @@ error Transceiver_Enviar(dato buf[][tam_dato], byte *j,byte *nrosec){
                 i++;
             }
             //AHORA TENGO QUE ESPERAR EL ACK 10 INTENTOS
-            CPU_PrenderRTC(RTC_01S,25);
+            CPU_PrenderRTC(RTC_01S, 15); //CPU_PrenderRTC(RTC_01S,25);
             ban_ACK=APAGADO;
             while(ban_ACK==APAGADO){
             }
@@ -127,13 +127,13 @@ error Transceiver_Enviar(dato buf[][tam_dato], byte *j,byte *nrosec){
             if(ban_ACK==HAYPAQUETE &&
             	Transceiver_AnalizarACK(Buffer_Rx,nrosec)==_ERR_OK){
                 	(*j)++;
-                	intentos_ack=40;
+                	intentos_ack=10;
                     if(*j==cantidad_datos){
                     	ban_bufferTx=1; //buffer de transmision vacio
-                    	LED_PrenderR();
+                    	//LED_PrenderR();
 		                //LED_PrenderV();
 		                Cpu_Delay100US(200);
-		                LED_ApagarR();
+		                //LED_ApagarR();
 		                //LED_ApagarV();
 						if(SD_Condatos()==_ERR_OK){
 							(void)SD_Leer(dir_lectura, buf);
@@ -165,7 +165,7 @@ error Transceiver_Enviar(dato buf[][tam_dato], byte *j,byte *nrosec){
             }else{
                 intentos_ack++;
                 //BORRAME++;
-                if(intentos_ack==40)
+                if(intentos_ack==10)
                     bandera_incompleto=1;
             }
         ban_ACK=APAGADO;
@@ -179,8 +179,8 @@ error Transceiver_Enviar(dato buf[][tam_dato], byte *j,byte *nrosec){
 error Transceiver_Analizar(byte buf[]){
 	if(buf[0]==id)
     	if((buf[1] & flag_turno) != 0){
-        	LED_BrillarV(1,200);
-        	LED_BrillarR(1,200);
+        	//LED_BrillarV(1,200);
+        	//LED_BrillarR(1,200);
             return _ERR_OK;
         }
     return _ERR_TURNO;
