@@ -137,7 +137,7 @@ void main(void) {
 					 /*for(i=0;i<10;i++){
 						 LED_BrillarR(2,300); //Avisa que se esta escribiendo la SD
 						 LED_BrillarV(2,300);  
-					}*/
+					 }*/
 				}
 			}
 			else{

@@ -429,7 +429,7 @@ return _ERR_OK;
 }
 
 error SD_LeerDireccion(){
-	//UINT32 u32SD_Block;
+	UINT32 u32SD_Arch;
     int h=0, i=0;
     (void)SD_Assert();
     
@@ -450,6 +450,25 @@ error SD_LeerDireccion(){
         dir_base_lon[i-12] = Buffer_Envio[0][i];
     
     id = Buffer_Envio[0][i];
+    
+    if(dir_lectura[0]==0&&dir_lectura[1]==0&&dir_lectura[2]==0&&dir_lectura[3]==0&&
+    		dir_escritura[0]==0&&dir_escritura[1]==0&&dir_escritura[2]==0&&dir_escritura[3]==0){
+    	u32SD_Arch=(UINT32) u16FAT_Data_BASE + 1; //Establece el segundo sector del archivo como el inicio de lectura y escritura
+    	dir_lectura[0]=(byte)(u32SD_Arch>>24);
+		dir_lectura[1]=(byte)(u32SD_Arch>>16);
+		dir_lectura[2]=(byte)(u32SD_Arch>>8);
+		dir_lectura[3]=(byte)(u32SD_Arch);
+		dir_escritura[0]=(byte)(u32SD_Arch>>24);
+		dir_escritura[1]=(byte)(u32SD_Arch>>16);
+		dir_escritura[2]=(byte)(u32SD_Arch>>8);
+		dir_escritura[3]=(byte)(u32SD_Arch);
+		SD_Assert();
+		for(i=0;i<4;i++)
+			Buffer_Envio[0][i] = dir_lectura[i];
+		for(;i<8;i++)
+			Buffer_Envio[0][i] = dir_escritura[i-4];
+		(void) SD_WriteSector((UINT32) u16FAT_Data_BASE, (UINT8 *) Buffer_Envio); //2600 sector del archivo binario, hacer vble global
+    }
         
     (void)SD_DesAssert();
     (void)Cpu_Delay100US(100);

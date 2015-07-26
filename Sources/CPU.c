@@ -164,15 +164,15 @@ void CPU_ApagarRTC(){
 byte CPU_DameTension(){
 	int c=0;
 	byte temp,i;
-	PTADD_PTADD7 = 1;
-	TENSION_OUT = 1;  
+	//PTADD_PTADD7 = 1;
+	//TENSION_OUT = 1;  
 	for(i=0;i<3;i++){
 		ADCSC1=0x08;	// Trata de medir tension en PTA6 AD8
 		while((ADCSC1&0x80)==0 && c++<5000){ //Esperan que COCO=1
 		}
 		temp=ADCRL;
 	}
-	TENSION_OUT = 0;
+	//TENSION_OUT = 0;
 	return temp;
 }
 

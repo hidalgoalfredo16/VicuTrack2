@@ -59,10 +59,14 @@ error Init_Trans(void){
     && CadenaInit[5]=='4' && CadenaInit[6]=='5' && CadenaInit[7]=='5' && CadenaInit[8]=='0' && CadenaInit[9]=='0' && CadenaInit[10]=='0' 
     && CadenaInit[12]=='3' && CadenaInit[14]=='9' && CadenaInit[16]=='3' && CadenaInit[18]=='0')
     {
+    	(void)Transceiver_Apagar();
     	return _ERR_OK;
     }
-    else
+    else{
+    	(void)Transceiver_Apagar();
     	return _ERR_DISTINTO;
+    }
+    	
 }
 
 error Transceiver_SetAlto(){
