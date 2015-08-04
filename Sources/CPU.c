@@ -107,6 +107,7 @@ error Init_CPU(void){
 	    //RTCSC =0xF6;
 	    //RTCMOD=0x01;
 	    //id=0x11;
+	    ADCCFG=0X08;				//Configura la lectura del sensor en 10 bits
 	    ban_vueltacomp = APAGADO;     //=0apagada =1corriendo =2finalizado
 	    ban_turno=APAGADO;          //=0apagada =1corriendo =2finalizado
 	    ban_bufferTx=1;             //1=no tiene datos

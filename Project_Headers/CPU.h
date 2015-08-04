@@ -26,7 +26,7 @@
 //! Tambien utilizada para dar valor a la variable vueltasRTC para hacer que el dispositivo duerma una hora
 #define MINUTO 60
 //! Constante utilizada para dar valor a la variable vueltasRTC e indica cuanto tiempo el dispositivo estara dormido durante el periodo de bajo consumo
-#define VUELTAS 60 //CADA VUELTA ES 1 MINUTO DORMIDO DEFAULT=60;
+#define VUELTAS 1 //CADA VUELTA ES 1 MINUTO DORMIDO DEFAULT=60;
 //! Constante que indica cuantas veces se tomara un dato igual a los anteriores antes de declarar al dispositivo en estado de muerte
 #define MUERTO 500 //500
 //! Constante utilizada como parametro en la funcion Cpu_Delay100US

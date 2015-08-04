@@ -65,7 +65,7 @@ void main(void) {
 
   EnableInterrupts;
   /* include your code here */
-  
+ 
  for(;;) {
   ///////////////// RECEPCION SEÑAL DE MUERTE ///////////////       
 
@@ -84,9 +84,9 @@ void main(void) {
 		 CPU_ApagarRTC();
 		 (void)GPS_Prender();
 		 if(ban_fix==1)
-			CPU_PrenderRTC(RTC_1SEG,40);// espero para que fixee el GPS. default=40seg; con pila de fix = 5;
+			CPU_PrenderRTC(RTC_1SEG,1);// espero para que fixee el GPS. default=40seg; con pila de fix = 5;
 		 else
-			CPU_PrenderRTC(RTC_1SEG,180); //120
+			CPU_PrenderRTC(RTC_1SEG,1); //120
 		 
 		 
 		EnableInterrupts;
@@ -152,7 +152,7 @@ void main(void) {
 		
 		if(ban_datogps==1){
 			ban_datogps=0;
-			if((GPS_CompararBase(dat)==_ERR_OK) && (ban_bufferTx==0 || ban_SDvacia==0)){ // si esta cerca de la base y tiene algo para transmitir 
+			if(/*(GPS_CompararBase(dat)==_ERR_OK) && */(ban_bufferTx==0 || ban_SDvacia==0)){ // si esta cerca de la base y tiene algo para transmitir 
 				EnableInterrupts;
 				vueltasRTC=VUELTAS;//tiene mas prioridad la Tx a la base q la SM
 				ban_horasm=NO;//
@@ -208,7 +208,7 @@ void main(void) {
 	 
  ////////// TERCERA PARTE: DORMIR DURANTE 15 MINUTOS //////////
 		
-		 CPU_PrenderRTC(RTC_1SEG,MINUTO);//(RTC_1SEG,1);
+		 CPU_PrenderRTC(RTC_1SEG,1);//(RTC_1SEG,MINUTO);
 		 ban_vueltacomp=CORRIENDO;
 		 while(ban_vueltacomp!=FIN){  //me duermo durante 1 minuto x veces
 			 asm{STOP
