@@ -30,8 +30,11 @@
 #define SD_CMD55_APP_CMD           (55)
 #define SD_CMD58_READ_OCR          (58)
 #define SD_CMD59_CRC_ON            (59)
+#define SD_CMD48_READ_EXTR_SINGLE  (48)
+#define SD_CMD49_WRITE_EXTR_SINGLE (49)
 #define SD_ACMD13_SEND_STATUS      SD_CMD13_SEND_STATUS
 #define SD_ACMD22_SEND_NUM_WR_BLOCKS (22)
+
 
 //! Define constantes para identificar las distintas respuestas a los comandos
 #define SD_R1_IDLE_STATE           (1 << 0)

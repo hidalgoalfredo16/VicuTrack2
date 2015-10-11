@@ -93,6 +93,10 @@ UINT8 SD_WriteData(UINT8 pu8DataPointer[], UINT32 u32DataLength);
 */
 UINT8 SD_Init(void);
 
+UINT8 SD_Apagar(void);
+
+UINT8 SD_Prender(void);
+
 //! Función para la lectura de un sector de disco de la tarjeta
 /*! 
     Esta función realiza la lectura de un sector de 512 bytes de datos
