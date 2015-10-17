@@ -53,8 +53,10 @@ void main(void) {
   temp=Init_LED();
   Cpu_Delay100US(UNSEG);
   temp=Init_Trans();
+  (void)Transceiver_Apagar();
   Cpu_Delay100US(UNSEG);
   temp=Init_GPS();
+  (void)GPS_Apagar();
   Cpu_Delay100US(UNSEG);
   temp=(error) SD_Init();
   LED_BrillarV(2,UNSEG);
@@ -62,10 +64,28 @@ void main(void) {
   ult_lat=0;
   ult_lon=0;
   vueltasRTC=VUELTAS;
-
+  datodaga=0;
   EnableInterrupts;
+  /*temp=0;
+  do{
+  	  if(CPU_DameTension()*72/256<35){
+  		  CPU_PrenderRTC(RTC_1SEG,MINUTO);//(RTC_1SEG,1);
+  		  		 ban_vueltacomp=CORRIENDO;
+  		  		 while(ban_vueltacomp!=FIN){  //me duermo durante 1 minuto x veces
+  		  			 asm{STOP
+  		  			 }
+  		  		 } 
+  		  __RESET_WATCHDOG();
+  	  }else{
+  		  temp=1;
+  	  }
+    }while(temp!=1);*/
   /* include your code here */
- 
+  /*for(;;){
+	  (void)Transceiver_Prender();
+	  (void)Transceiver_EnviarByte(datodaga);
+	  __RESET_WATCHDOG();
+  }*/
  for(;;) {
   ///////////////// RECEPCION SEÑAL DE MUERTE ///////////////       
 
@@ -86,7 +106,7 @@ void main(void) {
 		 if(ban_fix==1)
 			CPU_PrenderRTC(RTC_1SEG,1);// espero para que fixee el GPS. default=40seg; con pila de fix = 5;
 		 else
-			CPU_PrenderRTC(RTC_1SEG,1); //120
+			CPU_PrenderRTC(RTC_1SEG,1); //
 		 
 		 
 		EnableInterrupts;
@@ -104,7 +124,10 @@ void main(void) {
 			 (void)GPS_Recibir(tc);// recibo datos en crudo del GPS durante 5 intentos
 				  
 		}while(GPS_Analizar(tr,tc) != _ERR_OK && intentos_gps++<5);// analizamos si son datos validos 5 veces
-		(void)GPS_Apagar();
+		//if(datodaga++==3){
+			(void)GPS_Apagar();
+		//	datodaga=0;
+		//}
 		 if(intentos_gps<5){
 			resp2 = GPS_Dato(dat,tr);// limpiamos la trama y dejamos solo los datos importantes
 			//LED_BrillarV(2,UNSEG); // Avisa que tengo un dato bien tomado del GPS
@@ -114,7 +137,7 @@ void main(void) {
 			
  ///////// CONTROLAMOS SI SE MOVIO EL MOVIL ////////////
 			//LED_ApagarV();
-			if(GPS_CompararDato(dat,&ult_lat,&ult_lon)==_ERR_OK){// (va !=)comparamos con la medicion anterior para saber si me movil
+			if(GPS_CompararDato(dat,&ult_lat,&ult_lon)!=_ERR_OK){// (va !=)comparamos con la medicion anterior para saber si me movil
 				cont_muerte=0;									 //ERROR OK->Iguales
 				if(ban_datodif==1){// esta bandera dice que ya cambio entonces a cont. escribimos el ultimo dato 
 					 ban_datodif=0; //igual y a cont. escribimos el dato distinto.
@@ -150,9 +173,9 @@ void main(void) {
 		
  ////////// SEGUNDA PARTE: TRANSMISION DE DATOS //////////
 		
-		if(ban_datogps==1){
+		if(/*ban_datogps*/1==1){
 			ban_datogps=0;
-			if(/*(GPS_CompararBase(dat)==_ERR_OK) && */(ban_bufferTx==0 || ban_SDvacia==0)){ // si esta cerca de la base y tiene algo para transmitir 
+			if(/*(GPS_CompararBase(dat)==_ERR_OK) && (ban_bufferTx==0 || ban_SDvacia==0)*/1==1){ // si esta cerca de la base y tiene algo para transmitir 
 				EnableInterrupts;
 				vueltasRTC=VUELTAS;//tiene mas prioridad la Tx a la base q la SM
 				ban_horasm=NO;//
@@ -207,7 +230,7 @@ void main(void) {
 			RUTINA_MUERTE();
 	 
  ////////// TERCERA PARTE: DORMIR DURANTE 15 MINUTOS //////////
-		
+		 SPIC1=0x00;
 		 CPU_PrenderRTC(RTC_1SEG,1);//(RTC_1SEG,MINUTO);
 		 ban_vueltacomp=CORRIENDO;
 		 while(ban_vueltacomp!=FIN){  //me duermo durante 1 minuto x veces

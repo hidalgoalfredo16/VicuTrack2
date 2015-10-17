@@ -25,7 +25,7 @@ extern byte id;
 
 error Init_Trans(void){
     byte i, CadenaInit[19]="WR 455000 3 9 3 0\r\n"; //configuracion del transceiver f=455MHz, Data Rate 9600bps, output power 100mw
-    //byte CadenaInit[4]="RD\r\n";					 //UART data rate 9600bps, no checkout
+    byte CadenaInitRd[4]="RD\r\n";					 //UART data rate 9600bps, no checkout
     SCI2BDH = 0x00;
     SCI2BDL = 0x6D;							//El baudrate era 0x70
     // SCIC1: LOOPS=0,SCISWAI=0,RSRC=0,M=0,WAKE=0,ILT=0,PE=0,PT=0
@@ -42,8 +42,8 @@ error Init_Trans(void){
     (void) Transceiver_Prender();
     (void) Transceiver_SetBajo();
     
-    for(i=0; i<19; i++){
-    	(void) Transceiver_EnviarByte(CadenaInit[i]);
+    for(i=0; i<4; i++){
+    	(void) Transceiver_EnviarByte(CadenaInitRd[i]);
     }
     
     i=0;
@@ -55,6 +55,10 @@ error Init_Trans(void){
 		}
     }
     
+    //Baud Rate 2400bps
+        /*SCI2BDH = 0x01;
+        SCI2BDL = 0xB4;*/
+        
     if(CadenaInit[0]=='P' && CadenaInit[1]=='A' && CadenaInit[2]=='R' && CadenaInit[3]=='A' 
     && CadenaInit[5]=='4' && CadenaInit[6]=='5' && CadenaInit[7]=='5' && CadenaInit[8]=='0' && CadenaInit[9]=='0' && CadenaInit[10]=='0' 
     && CadenaInit[12]=='3' && CadenaInit[14]=='9' && CadenaInit[16]=='3' && CadenaInit[18]=='0')
@@ -146,8 +150,9 @@ error Transceiver_Enviar(dato buf[][tam_dato], byte *j,byte *nrosec){
 						} else {
 							//En caso de que no haya mas datos para transmitir se envia una trama con flag ultimo
 							if((*nrosec)==255)
-								(*nrosec)=1;    //lo pongo a 1 porque si fuera 0 puedo tener problemas
-							(*nrosec)++;        //ya que en la base comparo con el anterior
+								(*nrosec)=1; //lo pongo a 1 porque si fuera 0 puedo tener problemas
+							else
+								(*nrosec)++;        //ya que en la base comparo con el anterior
 							Cpu_Delay100US(50);
 							(void)Transceiver_EnviarByte(id);
 							(void)Transceiver_EnviarByte(flag_ultimo);

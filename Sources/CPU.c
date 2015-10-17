@@ -107,7 +107,7 @@ error Init_CPU(void){
 	    //RTCSC =0xF6;
 	    //RTCMOD=0x01;
 	    //id=0x11;
-	    ADCCFG=0X08;				//Configura la lectura del sensor en 10 bits
+	    //ADCCFG=0X08;				//Configura la lectura del sensor en 10 bits
 	    ban_vueltacomp = APAGADO;     //=0apagada =1corriendo =2finalizado
 	    ban_turno=APAGADO;          //=0apagada =1corriendo =2finalizado
 	    ban_bufferTx=1;             //1=no tiene datos
@@ -167,6 +167,7 @@ byte CPU_DameTension(){
 	byte temp,i;
 	//PTADD_PTADD7 = 1;
 	//TENSION_OUT = 1;  
+	ADCCFG=0X00;				//Configura la lectura del sensor en 8 bits
 	for(i=0;i<3;i++){
 		ADCSC1=0x08;	// Trata de medir tension en PTA6 AD8
 		while((ADCSC1&0x80)==0 && c++<5000){ //Esperan que COCO=1
@@ -180,7 +181,7 @@ byte CPU_DameTension(){
 byte CPU_DameTemperatura(){
 	int c=0;
 	byte temp,i;
-
+	ADCCFG=0X08;				//Configura la lectura del sensor en 10 bits
 	for(i=0;i<3;i++){
 		ADCSC1=0x1A;	//Configura para leer el sensor de temperatura AD26
 		while((ADCSC1&0x80)==0 && (c++<5000)){ //Esperan que COCO=1
