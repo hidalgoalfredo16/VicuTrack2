@@ -30,7 +30,6 @@ byte ban_horasm=NO;
 byte dir_escritura[4];
 //! Vector que almacena la direccion en donde debe realizarse la proxima lectura de datos
 byte dir_lectura[4];
-
 //////// DECLARACION DE VARIABLES EXTERNAS //////////
 extern byte ban_fix;
 extern byte ban_esperafix;
@@ -40,53 +39,36 @@ extern byte ban_turno;
 extern byte index_Rx;
 extern byte ban_ACK;
 extern byte ban_vueltacomp;
-
 void main(void) {
-	error temp;                   
-	byte nrosec=1,ban_datogps=0, datodaga=0x61;
+  UINT32 u32SD_Block;
+  error temp;                   
+  byte nrosec=1,ban_datogps=0;
   byte i,intentos_gps=0,intentos_turno=0,intentos_ack=0,indice=0, ban_datodif=0;
   int sync=0, cont_muerte=0;
   error resp2, resp3;
   long ult_lat=0,ult_lon=0;
   trama_reducida tr[tam_trama_reducida];
-  temp=Init_CPU();
+
+  ///////////////// INICIALIZACIONES /////////////// 
+  temp=Init_CPU();	
   temp=Init_LED();
   Cpu_Delay100US(UNSEG);
   temp=Init_Trans();
-  (void)Transceiver_Apagar();
-  Cpu_Delay100US(UNSEG);
   temp=Init_GPS();
-  (void)GPS_Apagar();
+  (void)GPS_Prender();
+  Cpu_Delay100US(UNSEG);
   Cpu_Delay100US(UNSEG);
   temp=(error) SD_Init();
   LED_BrillarV(2,UNSEG);
-//  LED_BrillarR(2,UNSEG);
+  (void)SD_Apagar();
+  (void)GPS_Apagar();
   ult_lat=0;
   ult_lon=0;
   vueltasRTC=VUELTAS;
-  datodaga=0;
   EnableInterrupts;
-  /*temp=0;
-  do{
-  	  if(CPU_DameTension()*72/256<35){
-  		  CPU_PrenderRTC(RTC_1SEG,MINUTO);//(RTC_1SEG,1);
-  		  		 ban_vueltacomp=CORRIENDO;
-  		  		 while(ban_vueltacomp!=FIN){  //me duermo durante 1 minuto x veces
-  		  			 asm{STOP
-  		  			 }
-  		  		 } 
-  		  __RESET_WATCHDOG();
-  	  }else{
-  		  temp=1;
-  	  }
-    }while(temp!=1);*/
   /* include your code here */
-  /*for(;;){
-	  (void)Transceiver_Prender();
-	  (void)Transceiver_EnviarByte(datodaga);
-	  __RESET_WATCHDOG();
-  }*/
- for(;;) {
+  
+  for(;;) {
   ///////////////// RECEPCION SEÑAL DE MUERTE ///////////////       
 
 		 if(ban_horasm == SI){
@@ -94,21 +76,19 @@ void main(void) {
 			(void)Transceiver_RecibirSM();	  
 			ban_horasm=NO;
 			vueltasRTC=MINUTO; //Duerme 1 hora
-		 }
-		 
+		 } 
 
- /////////////// PRENDEMOS EL GPS 5 SEG PARA QUE FIXEE ///////////////			  
+ /////////////// PRENDEMOS EL GPS PARA QUE FIXEE ///////////////			  
 
 		 intentos_gps=0;
 		 DisableInterrupts;
 		 CPU_ApagarRTC();
 		 (void)GPS_Prender();
 		 if(ban_fix==1)
-			CPU_PrenderRTC(RTC_1SEG,1);// espero para que fixee el GPS. default=40seg; con pila de fix = 5;
+			CPU_PrenderRTC(RTC_1SEG,40);// 40 espero para que fixee el GPS. default=40seg; con pila de fix = 5;
 		 else
-			CPU_PrenderRTC(RTC_1SEG,1); //
-		 
-		 
+			CPU_PrenderRTC(RTC_1SEG,120); //120
+		
 		EnableInterrupts;
 		ban_esperafix=0;
 		while(ban_esperafix==0){
@@ -124,10 +104,7 @@ void main(void) {
 			 (void)GPS_Recibir(tc);// recibo datos en crudo del GPS durante 5 intentos
 				  
 		}while(GPS_Analizar(tr,tc) != _ERR_OK && intentos_gps++<5);// analizamos si son datos validos 5 veces
-		//if(datodaga++==3){
-			(void)GPS_Apagar();
-		//	datodaga=0;
-		//}
+		(void)GPS_Apagar();
 		 if(intentos_gps<5){
 			resp2 = GPS_Dato(dat,tr);// limpiamos la trama y dejamos solo los datos importantes
 			//LED_BrillarV(2,UNSEG); // Avisa que tengo un dato bien tomado del GPS
@@ -137,30 +114,34 @@ void main(void) {
 			
  ///////// CONTROLAMOS SI SE MOVIO EL MOVIL ////////////
 			//LED_ApagarV();
-			if(GPS_CompararDato(dat,&ult_lat,&ult_lon)!=_ERR_OK){// (va !=)comparamos con la medicion anterior para saber si me movil
+			if(/*GPS_CompararDato(dat,&ult_lat,&ult_lon)!=_ERR_OK*/1==1){// (va !=)comparamos con la medicion anterior para saber si me movil
 				cont_muerte=0;									 //ERROR OK->Iguales
 				if(ban_datodif==1){// esta bandera dice que ya cambio entonces a cont. escribimos el ultimo dato 
 					 ban_datodif=0; //igual y a cont. escribimos el dato distinto.
 					 if( GPS_EscribirBuffer(ult_dat,Buffer_GPS)==_ERR_OVF){// escribimos en el buffer, si esta lleno informa
-						  //temp=(error) SD_Init();
-						  //temp=SD_Prender();
+						 (void)GPS_Prender();	//Esto se hace ya que la sd esta conectada al regulador del GPS, lo ideal seria que se use otra pata del micro
+						 (void)SD_Prender(); 
+						  temp=(error) SD_Init();
 						  resp3=SD_Escribir(dir_escritura,Buffer_GPS);// escribimos la SD con el buffer lleno
-						  //resp2=SD_CalculaDireccion(dir_escritura);// actualizamos la dir escritura de la SD
 						  resp2=SD_CalculaDireccion(dir_escritura, Buffer_GPS); // Usamos ese buffer xq necesitamos mandar 512 bytes y ya se guardo lo que tenia
-						  (void)GPS_EscribirBuffer(ult_dat,Buffer_GPS);// escribimos el dato q no se pudo guardar anteriormente
+						 (void)GPS_EscribirBuffer(ult_dat,Buffer_GPS);// escribimos el dato q no se pudo guardar anteriormente
+						 (void)SD_Apagar(); 
+						 (void)GPS_Apagar();
 					 }
 				}
 				if( GPS_EscribirBuffer(dat,Buffer_GPS)==_ERR_OVF){ //va ==
-					 //temp=(error) SD_Init();
-					 //temp=SD_Prender();
-					 resp3=SD_Escribir(dir_escritura,Buffer_GPS);
-					 //resp2=SD_CalculaDireccion(dir_escritura);
-					 resp2=SD_CalculaDireccion(dir_escritura,Buffer_GPS);
-					 (void)GPS_EscribirBuffer(dat,Buffer_GPS);
-					 /*for(i=0;i<10;i++){
-						 LED_BrillarR(2,300); //Avisa que se esta escribiendo la SD
-						 LED_BrillarV(2,300);  
-					 }*/
+					(void)GPS_Prender();	//Esto se hace ya que la sd esta conectada al regulador del GPS, lo ideal seria que se use otra pata del micro
+					(void)SD_Prender(); 
+					temp=(error) SD_Init(); 
+					resp3=SD_Escribir(dir_escritura,Buffer_GPS);
+					resp2=SD_CalculaDireccion(dir_escritura,Buffer_GPS);
+					(void)GPS_EscribirBuffer(dat,Buffer_GPS);
+					(void)SD_Apagar(); 
+					(void)GPS_Apagar();
+					/*for(i=0;i<10;i++){
+					 	 LED_BrillarR(2,300); //Avisa que se esta escribiendo la SD
+					 	 LED_BrillarV(2,300);  
+					}*/
 				}
 			}
 			else{
@@ -173,9 +154,9 @@ void main(void) {
 		
  ////////// SEGUNDA PARTE: TRANSMISION DE DATOS //////////
 		
-		if(/*ban_datogps*/1==1){
+		if(ban_datogps==1){
 			ban_datogps=0;
-			if(/*(GPS_CompararBase(dat)==_ERR_OK) && (ban_bufferTx==0 || ban_SDvacia==0)*/1==1){ // si esta cerca de la base y tiene algo para transmitir 
+			if((GPS_CompararBase(dat)==_ERR_OK) && (ban_bufferTx==0 || ban_SDvacia==0)){ // si esta cerca de la base y tiene algo para transmitir 
 				EnableInterrupts;
 				vueltasRTC=VUELTAS;//tiene mas prioridad la Tx a la base q la SM
 				ban_horasm=NO;//
@@ -230,8 +211,8 @@ void main(void) {
 			RUTINA_MUERTE();
 	 
  ////////// TERCERA PARTE: DORMIR DURANTE 15 MINUTOS //////////
-		 SPIC1=0x00;
-		 CPU_PrenderRTC(RTC_1SEG,1);//(RTC_1SEG,MINUTO);
+		
+		 CPU_PrenderRTC(RTC_1SEG,MINUTO);//(RTC_1SEG,1)
 		 ban_vueltacomp=CORRIENDO;
 		 while(ban_vueltacomp!=FIN){  //me duermo durante 1 minuto x veces
 			 asm{STOP

@@ -24,10 +24,12 @@ extern byte dir_lectura[4];
 extern byte id;
 
 error Init_Trans(void){
-    byte i, CadenaInit[19]="WR 455000 3 9 3 0\r\n"; //configuracion del transceiver f=455MHz, Data Rate 9600bps, output power 100mw
-    byte CadenaInitRd[4]="RD\r\n";					 //UART data rate 9600bps, no checkout
+    byte i, CadenaInit[19]="WR 455000 3 9 3 0\r\n"; //configuracion del transceiver f=455MHz, Data Rate 9600bps, output power 100mw,UART data rate 9600bps, no checkout
+    //byte CadenaInitRd[4]="RD\r\n";					//Cadena que sirve para que el transceiver muestre que configuracion tiene
+    
+    //Configuracion del Baudrate del micro para que transmita a 9600 
     SCI2BDH = 0x00;
-    SCI2BDL = 0x6D;							//El baudrate era 0x70
+    SCI2BDL = 0x6D;				//El baudrate era 0x70
     // SCIC1: LOOPS=0,SCISWAI=0,RSRC=0,M=0,WAKE=0,ILT=0,PE=0,PT=0
     SCI2C1 = 0x00;                // Configure the SCI
     // SCIC3: R8=0,T8=0,TXDIR=0,TXINV=0,ORIE=1,NEIE=0,FEIE=0,PEIE=0
@@ -39,14 +41,16 @@ error Init_Trans(void){
     // PIN enable comosalida
     TransceiverEnable_Direccion = 1;
     
-    (void) Transceiver_Prender();
+    //Prendo el transceiver y lo configuro
+    (void) Transceiver_Prender();	
     (void) Transceiver_SetBajo();
     
-    for(i=0; i<4; i++){
-    	(void) Transceiver_EnviarByte(CadenaInitRd[i]);
+    for(i=0; i<19; i++){
+    	(void) Transceiver_EnviarByte(CadenaInit[i]); //Envio la CadenaInit con los parametros que deseo configurar
     }
     
     i=0;
+    //Espero que el transceiver responda a las configuraciones enviadas.
     while(i<19){
 		if(SCI2S1_RDRF != 0x00){           //si hay algo en el buffer de recepcion lo guardo
 			(void)SCI2S1;
@@ -58,7 +62,8 @@ error Init_Trans(void){
     //Baud Rate 2400bps
         /*SCI2BDH = 0x01;
         SCI2BDL = 0xB4;*/
-        
+    
+    //Controlo que la respuesta de la configuracion sea la correcta.
     if(CadenaInit[0]=='P' && CadenaInit[1]=='A' && CadenaInit[2]=='R' && CadenaInit[3]=='A' 
     && CadenaInit[5]=='4' && CadenaInit[6]=='5' && CadenaInit[7]=='5' && CadenaInit[8]=='0' && CadenaInit[9]=='0' && CadenaInit[10]=='0' 
     && CadenaInit[12]=='3' && CadenaInit[14]=='9' && CadenaInit[16]=='3' && CadenaInit[18]=='0')
@@ -232,10 +237,14 @@ error Transceiver_RecibirSM(){
 	    	(void)CPU_ApagarRTC(); //yo lo pondria dentro del siguiente if
 	    	if(Transceiver_ControlarDato()==_ERR_OK){
 	    		if(GPS_EscribirBuffer(Buffer_Rx,Buffer_GPS)== _ERR_OVF){
+	    			(void)GPS_Prender();	//Esto se hace ya que la sd esta conectada al regulador del GPS, lo ideal seria que se use otra pata del micro
+					(void)SD_Prender(); 
+					(void)(error) SD_Init();
 					(void)SD_Escribir(dir_escritura,Buffer_GPS);// escribimos la SD con el buffer lleno
-					//(void)SD_CalculaDireccion(dir_escritura);// actualizamos la dir escritura de la SD
 					(void)SD_CalculaDireccion(dir_escritura,Buffer_GPS);
 					(void)GPS_EscribirBuffer(Buffer_Rx,Buffer_GPS);
+					(void)SD_Apagar(); 
+					(void)GPS_Apagar();
 	    	  	}
 	    		(void) Transceiver_Apagar();
 	    		return _ERR_OK;

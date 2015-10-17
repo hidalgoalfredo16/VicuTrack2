@@ -273,7 +273,33 @@ UINT8 SD_Init(void) {
   //SPI_HighRate();	//Cambio el baudrate
   FAT_Read_Master_Block((UINT8 *)Buffer_Envio);
   (void)SD_LeerDireccion();
+
   return (SD_OK);
+}
+
+UINT8 SD_Apagar(void){
+	(void)SPIS;
+	(void)SPID;
+	SPIC2 = 0x00;
+	SPIC1_SPE = 0;
+	//SPIC1_MSTR = 0;
+	PTBDD_PTBDD2 = 0;
+	PTBDD_PTBDD3 = 0;
+	PTBDD_PTBDD4 = 0;
+	PTBDD_PTBDD5 = 0;
+	/*PTBPE_PTBPE2 = 0;
+	PTBPE_PTBPE3 = 0;
+	PTBPE_PTBPE4 = 0;
+	PTBPE_PTBPE5 = 0;*/ 
+	return (SD_OK);
+}
+
+UINT8 SD_Prender(void){
+	PTBDD_PTBDD2 = 0;
+	PTBDD_PTBDD3 = 1;
+	PTBDD_PTBDD4 = 0;
+	PTBDD_PTBDD5 = 1;
+	return (SD_OK);
 }
 
 UINT8 SD_ReadSector(UINT32 u32SD_Block,UINT8 pu8DataPointer[]) {
@@ -475,4 +501,18 @@ error SD_LeerDireccion(){
     //ban_bufferTx=0;
     
     return _ERR_OK;
+}
+
+void SD_Dormir(){
+	UINT32 u32SD_Block;
+	UINT32 response;
+	byte temp;
+	  u32SD_Block = 0X08;
+	  u32SD_Block <<= 8;
+	  u32SD_Block |= 0x00;
+	  u32SD_Block <<= 8;
+	  u32SD_Block |= 0X02;
+	  u32SD_Block <<= 8;
+	  u32SD_Block |= 0x00;
+	  temp = SD_SendCommand(SD_CMD48_READ_EXTR_SINGLE, u32SD_Block, (UINT8*)&response, 1); // NULL, 0); 
 }

@@ -93,6 +93,10 @@ UINT8 SD_WriteData(UINT8 pu8DataPointer[], UINT32 u32DataLength);
 */
 UINT8 SD_Init(void);
 
+UINT8 SD_Apagar(void);
+
+UINT8 SD_Prender(void);
+
 //! Función para la lectura de un sector de disco de la tarjeta
 /*! 
     Esta función realiza la lectura de un sector de 512 bytes de datos
@@ -158,3 +162,6 @@ error SD_Condatos(void);
     @li @c 1 _ERR_OK No se produjo un error
 */
 error SD_LeerDireccion(void);
+
+//! Envia el comando 48 para saber si la SD puede entrar en estado de bajo consumo
+void SD_Dormir();
